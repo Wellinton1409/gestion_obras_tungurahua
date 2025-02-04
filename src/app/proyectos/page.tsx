@@ -12,7 +12,6 @@ import {
     query,
     where,
 } from "firebase/firestore";
-import { normalize } from "path";
 
 const Proyectos: React.FC = () => {
     const [codigo, setCodigo] = useState("");
@@ -60,7 +59,7 @@ const Proyectos: React.FC = () => {
                 setProyectos([]);
                 setNuevoProyecto({
                     ...nuevoProyecto,
-                    fiscalizador: "" // Limpiar el campo de fiscalizador si no existe
+                    fiscalizador: nombreFiscalizador // Limpiar el campo de fiscalizador si no existe
                 });
                 return;
             }
@@ -168,6 +167,7 @@ const Proyectos: React.FC = () => {
                 const proyectoRef = doc(db, "proyectos", selectedProyecto.id);
                 await deleteDoc(proyectoRef);
                 alert("Proyecto eliminado");
+                setnombreFiscalizador(nombreFiscalizador);
                 buscarProyectos(); // Refrescar lista
                 setSelectedProyecto(null);
                 setNuevoProyecto({});
