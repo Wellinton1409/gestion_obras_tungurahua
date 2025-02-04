@@ -172,6 +172,7 @@ const Proyectos: React.FC = () => {
                 setProyectos(proyectos.filter(proyecto => proyecto.id !== selectedProyecto.id));
                 setSelectedProyecto(null);
                 setNuevoProyecto({});
+                await buscarProyectos();
 
             } catch (error) {
                 console.error("Error al eliminar el proyecto:", error);
