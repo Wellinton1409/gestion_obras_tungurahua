@@ -1,0 +1,130 @@
+.header {
+    /*background-color: #003618;*/
+    background-color: #004D25;
+    border: 0px;
+    border-radius: 0%;
+    width: 100%;
+    min-height: 130px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: center;
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.5);
+}
+
+.headerImg {
+    position: absolute;
+    height: 100%;
+    width: auto;
+    left: 4%;
+    display: flex;
+    align-items: flex-start;
+}
+
+.headerImg img {
+    height: 100%;
+    width: auto;
+    color: #FFFFFF;
+}
+
+.barraNavegacion {
+    position: absolute;
+    width: 100%;
+    height: 30px;
+    bottom: 0%;
+}
+
+.barraNavegacion ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.barraNavegacion li {
+    font-family: 'Arial', sans-serif;
+    font-weight: normal;
+    color: #ffffff;
+    padding: 4px 2% 4px 0px;
+    border-left: 1px dashed #ccc;
+    padding-left: 2%;
+}
+
+.barraNavegacion li:first-child {
+    border-left: none;
+}
+
+.enlace {
+    text-decoration: none;
+    color: inherit;
+    font-size: 12px;
+}
+
+.userMenu {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+    height: 80px;
+    right: 3%;
+    top: 30%;
+}
+
+.userMenuButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 50px;
+    padding: 5px;
+}
+
+.userMenuButton img {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
+
+.userName {
+    text-align: center;
+    color: white;
+    font-size: 12px;
+}
+
+.userMenuContent {
+    display: none;
+    position: absolute;
+    width: 120px;
+    right: -10;
+    top: 70px;
+    background-color: white;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.userMenuContent a {
+    color: black;
+    padding: 10px 10px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+}
+
+.userMenuContent a:hover {
+    background-color: #dbdadab4;
+}
+
+.userMenu:hover .userMenuContent {
+    display: block;
+}
+
+.red-line {
+    background-color: #850000;
+    height: 5px;
+    width: 100%;
+    position: relative;
+
+}
