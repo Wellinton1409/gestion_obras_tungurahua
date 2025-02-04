@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { db } from "../../../firebase";
+import { db } from "../../lib/firebase";
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
 const Usuarios = () => {
