@@ -9,17 +9,27 @@ const Usuarios = () => {
     const [codigo, setCodigo] = useState("");
     const [modoEdicion, setModoEdicion] = useState<string | null>(null);
     const [nombreEditado, setNombreEditado] = useState("");
+    const [isMounted, setIsMounted] = useState(false);
+
 
     const usuariosCollection = collection(db, "usuarios");
 
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
     // Cargar usuarios desde Firestore
     useEffect(() => {
-        const fetchUsuarios = async () => {
-            const data = await getDocs(usuariosCollection);
-            setUsuarios(data.docs.map((doc) => ({ id: doc.id, ...doc.data() } as any)));
-        };
-        fetchUsuarios();
-    }, []);
+        if (isMounted) {
+            const fetchUsuarios = async () => {
+                const data = await getDocs(usuariosCollection);
+                setUsuarios(data.docs.map((doc) => ({ id: doc.id, ...doc.data() } as any)));
+            };
+            fetchUsuarios();
+        }
+    }, [isMounted]);
+
+    if (!isMounted) return null;
 
 
     // Agregar usuario

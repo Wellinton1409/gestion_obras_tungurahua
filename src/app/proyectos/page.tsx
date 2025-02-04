@@ -18,7 +18,7 @@ const Proyectos: React.FC = () => {
     const [nombreFiscalizador, setnombreFiscalizador] = useState("");
     const [proyectos, setProyectos] = useState<any[]>([]);
     const [selectedProyecto, setSelectedProyecto] = useState<any | null>(null); // Proyecto seleccionado
-    const [nuevoProyecto, setNuevoProyecto] = useState<any>({
+    const initialProyecto = {
         codFiscalizador: "",
         nombreProyecto: "",
         tecnicoResponsable: "",
@@ -31,7 +31,7 @@ const Proyectos: React.FC = () => {
         fchAdjudicacion: "",
         admiContrato: "",
         fiscalizador: "",
-        comisionCalificar: [],
+        comisionCalificar: ["", "", ""], // Asegura que siempre haya un array con valores
         fchPublicacion: "",
         actaProvisional: "",
         actaDefinitiva: "",
@@ -39,17 +39,19 @@ const Proyectos: React.FC = () => {
         ampliaciones: [],
         incremVolumenes: "",
         contrComplementario: "",
-        estadoActproyecto: ""
-    });
+        estadoActproyecto: "",
+    };
+    const [nuevoProyecto, setNuevoProyecto] = useState<any>(initialProyecto);
     const [mensajeError, setMensajeError] = useState("");
 
+    // useEffect(() => {
+    //     if (typeof window === "undefined") return; // Asegura que solo se ejecute en el cliente
+    // }, []);
 
     // Obtener proyectos por cédula
     const buscarProyectos = async () => {
         try {
-            setMensajeError(""); // Limpiar mensajes anteriores
-
-            //Buscar si el usuario con ese código existe en "usuarios"
+            setMensajeError("");
             const usuariosRef = collection(db, "usuarios");
             const usuarioQuery = query(usuariosRef, where("codigo", "==", codigo));
             const usuarioSnapshot = await getDocs(usuarioQuery);
@@ -57,18 +59,12 @@ const Proyectos: React.FC = () => {
             if (usuarioSnapshot.empty) {
                 setMensajeError("Código incorrecto");
                 setProyectos([]);
-                setNuevoProyecto({
-                    ...nuevoProyecto,
-                    fiscalizador: nombreFiscalizador // Limpiar el campo de fiscalizador si no existe
-                });
                 return;
             }
 
             const usuarioData = usuarioSnapshot.docs[0].data();
-            const fiscalizadorNombre = usuarioData.nombre || "";
-            setnombreFiscalizador(fiscalizadorNombre);
+            setnombreFiscalizador(usuarioData.nombre || "");
 
-            // Buscar proyectos en "proyectos" con el mismo código
             const proyectosRef = collection(db, "proyectos");
             const proyectosQuery = query(proyectosRef, where("codFiscalizador", "==", codigo));
             const proyectosSnapshot = await getDocs(proyectosQuery);
@@ -79,16 +75,13 @@ const Proyectos: React.FC = () => {
                 return;
             }
 
-            // 3️⃣ Extraer y guardar los proyectos
             const proyectosData = proyectosSnapshot.docs.map((doc) => ({
                 id: doc.id,
                 ...doc.data(),
             }));
 
             setProyectos(proyectosData);
-            setSelectedProyecto(null); // Limpiar selección previa
-
-
+            setSelectedProyecto(null);
         } catch (error) {
             console.error("Error al buscar proyectos:", error);
             setMensajeError("Ocurrió un error al buscar los proyectos.");
@@ -104,82 +97,62 @@ const Proyectos: React.FC = () => {
     // Crear un nuevo proyecto
     const crearProyecto = () => {
         setNuevoProyecto({
+            ...initialProyecto,
             codFiscalizador: codigo,
-            nombreProyecto: "",
-            tecnicoResponsable: "",
-            estadoProceso: "",
-            presupuesto: "",
-            avance: "",
-            procContratacion: "",
-            codContratacion: "",
-            contratista: "",
-            fchAdjudicacion: "",
-            admiContrato: "",
             fiscalizador: nombreFiscalizador,
-            comisionCalificar: [],
-            fchPublicacion: "",
-            actaProvisional: "",
-            actaDefinitiva: "",
-            planillas: [],
-            ampliaciones: [],
-            incremVolumenes: "",
-            contrComplementario: "",
-            estadoActproyecto: ""
         });
         setSelectedProyecto(null);
     };
 
     // Guardar o actualizar proyecto
     const guardarProyecto = async () => {
-        if (!nuevoProyecto.codFiscalizador.trim()) {
-            alert("El identificador del Fiscalizador es obligatorio.");
-            return;
-        }
-        if (!nuevoProyecto.nombreProyecto.trim()) {
-            alert("El nombre del proyecto es obligatorio.");
-            return;
-        }
+        try {
+            if (!nuevoProyecto.codFiscalizador.trim() || !nuevoProyecto.nombreProyecto.trim()) {
+                alert("El código del fiscalizador y el nombre del proyecto son obligatorios.");
+                return;
+            }
 
-        if (selectedProyecto) {
-            // Actualizar proyecto existente
-            const proyectoRef = doc(db, "proyectos", selectedProyecto.id);
-            await updateDoc(proyectoRef, nuevoProyecto);
-            alert("Proyecto actualizado");
-        } else {
-            // Crear nuevo proyecto
-            const proyectoVacio = {
-                codFiscalizador: codigo,
-                ...nuevoProyecto,
-            };
-            const docRef = await addDoc(collection(db, "proyectos"), proyectoVacio);
-            alert("Proyecto creado");
+            if (selectedProyecto) {
+                const proyectoRef = doc(db, "proyectos", selectedProyecto.id);
+                const { id, ...data } = nuevoProyecto;
+                await updateDoc(proyectoRef, data);
+                alert("Proyecto actualizado");
+            } else {
+                const docRef = await addDoc(collection(db, "proyectos"), {
+                    codFiscalizador: codigo,
+                    ...nuevoProyecto,
+                });
+                alert("Proyecto creado");
+            }
+            await buscarProyectos();
+        } catch (error) {
+            console.error("Error al guardar proyecto:", error);
         }
-        buscarProyectos(); // Refrescar lista
     };
 
     // Eliminar proyecto
     const eliminarProyecto = async () => {
-        if (selectedProyecto) {
+        try {
+            if (!selectedProyecto) {
+                alert("No hay un proyecto seleccionado para eliminar.");
+                return;
+            }
+
             const confirmar = confirm(`¿Estás seguro de eliminar el proyecto "${selectedProyecto.nombreProyecto}"?`);
             if (!confirmar) return;
 
-            try {
-                const proyectoRef = doc(db, "proyectos", selectedProyecto.id);
-                await deleteDoc(proyectoRef);
+            const proyectoRef = doc(db, "proyectos", selectedProyecto.id);
+            await deleteDoc(proyectoRef);
+            alert("Proyecto eliminado");
 
-                alert("Proyecto eliminado");
+            setProyectos((prev) => prev.filter(proyecto => proyecto.id !== selectedProyecto.id));
+            setSelectedProyecto(null);
+            setNuevoProyecto({ ...initialProyecto, codFiscalizador: codigo, fiscalizador: nombreFiscalizador });
 
-                setProyectos(proyectos.filter(proyecto => proyecto.id !== selectedProyecto.id));
-                setSelectedProyecto(null);
-                setNuevoProyecto({});
-                await buscarProyectos();
-
-            } catch (error) {
-                console.error("Error al eliminar el proyecto:", error);
-                alert("Hubo un error al eliminar el proyecto.");
-            }
-        } else {
-            alert("No hay un proyecto seleccionado para eliminar.");
+            await buscarProyectos();
+        } catch (error) {
+            console.error("Error al eliminar el proyecto:", error);
+            alert("Hubo un error al eliminar el proyecto.");
         }
     };
 
@@ -492,7 +465,7 @@ const Proyectos: React.FC = () => {
                                 <div className="campo_container">
                                     <input
                                         type="text"
-                                        value={nuevoProyecto.comisionCalificar[0] || ""}
+                                        value={nuevoProyecto.comisionCalificar?.[0] || ""}
                                         onChange={(e) => {
                                             const nuevosCalificadores = [...nuevoProyecto.comisionCalificar];
                                             nuevosCalificadores[0] = e.target.value;
@@ -505,7 +478,7 @@ const Proyectos: React.FC = () => {
                                 <div className="campo_container">
                                     <input
                                         type="text"
-                                        value={nuevoProyecto.comisionCalificar[1] || ""}
+                                        value={nuevoProyecto.comisionCalificar?.[1] || ""}
                                         onChange={(e) => {
                                             const nuevosCalificadores = [...nuevoProyecto.comisionCalificar];
                                             nuevosCalificadores[1] = e.target.value;
@@ -518,7 +491,7 @@ const Proyectos: React.FC = () => {
                                 <div className="campo_container">
                                     <input
                                         type="text"
-                                        value={nuevoProyecto.comisionCalificar[2] || ""}
+                                        value={nuevoProyecto.comisionCalificar?.[2] || ""}
                                         onChange={(e) => {
                                             const nuevosCalificadores = [...nuevoProyecto.comisionCalificar];
                                             nuevosCalificadores[2] = e.target.value;
