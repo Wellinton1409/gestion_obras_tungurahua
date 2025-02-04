@@ -161,16 +161,21 @@ const Proyectos: React.FC = () => {
     const eliminarProyecto = async () => {
         if (selectedProyecto) {
             const confirmar = confirm(`¿Estás seguro de eliminar el proyecto "${selectedProyecto.nombreProyecto}"?`);
-            if (!confirmar) {
-                return;
-            } else {
+            if (!confirmar) return;
+
+            try {
                 const proyectoRef = doc(db, "proyectos", selectedProyecto.id);
                 await deleteDoc(proyectoRef);
+
                 alert("Proyecto eliminado");
-                setnombreFiscalizador(nombreFiscalizador);
-                buscarProyectos(); // Refrescar lista
+
+                setProyectos(proyectos.filter(proyecto => proyecto.id !== selectedProyecto.id));
                 setSelectedProyecto(null);
                 setNuevoProyecto({});
+
+            } catch (error) {
+                console.error("Error al eliminar el proyecto:", error);
+                alert("Hubo un error al eliminar el proyecto.");
             }
         } else {
             alert("No hay un proyecto seleccionado para eliminar.");
