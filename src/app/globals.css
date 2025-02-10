@@ -19,6 +19,7 @@ body {
 
 main {
   flex: 1;
+  font-size: 12px;
 }
 
 
@@ -70,7 +71,6 @@ main {
 }
 
 .barra_lateral {
-  /* background-color: #969BA5; */
   background-color: #A6B2AC;
   height: 100%;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -294,18 +294,25 @@ main {
 .box_dos {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  width: 100%;
+}
 
+.box_dos_centrados {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  place-items: center;
 }
 
 .box_tres {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: auto auto auto;
 
 }
 
 .box_cuatro {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: auto auto auto auto;
 
 }
 
@@ -321,9 +328,20 @@ main {
   flex-shrink: 0;
 }
 
+.label_oculto {
+  display: none;
+}
+
 .campo_container {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  flex: 1;
+}
+
+.campo_container_planillas {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   flex: 1;
 }
@@ -339,15 +357,29 @@ main {
   background-color: #fffcfcdd;
 }
 
+
 .money_campos {
-  font-size: 16px;
-  width: 160px;
+  font-size: 14px;
+  min-width: 20%;
+  max-width: 190px;
   border-radius: 3px;
   border: none;
-  padding: 3px 10PX;
+  padding: 3px 6px;
   box-sizing: border-box;
   background-color: #fffcfcdd;
-  margin: 0 0 0 5px;
+  margin: 0 30px 0 3px;
+}
+
+.dias_campo {
+  font-size: 14px;
+  width: 60px;
+  border-radius: 3px;
+  border: none;
+  padding: 3px 8PX;
+  box-sizing: border-box;
+  background-color: #fffcfcdd;
+  margin: 0 2px 0 10px;
+  text-align: end;
 }
 
 .porcent_campo {
@@ -417,6 +449,7 @@ main {
   flex-direction: row;
   align-items: center;
   width: 100%;
+  margin: 5px 0 5px 0;
 }
 
 .input_group_ampliaciones {
@@ -428,15 +461,39 @@ main {
 }
 
 .input_planillas {
-  font-size: 14px;
-  margin: 6px 3% 6px 5px;
+  font-size: 12px;
+  margin: 6px 0.2% 6px 1px;
   flex: 1;
   border-radius: 3px;
   border: none;
-  padding: 4px 4PX;
+  padding: 5px 2px;
   box-sizing: border-box;
   background-color: #fffcfcdd;
-  width: 65%;
+  width: 6%;
+}
+
+.input_planillas::placeholder {
+  font-size: 12px;
+  color: rgba(128, 128, 128, 0.712);
+  opacity: 1;
+}
+
+.input_reajuste {
+  font-size: 12px;
+  margin: 6px 2% 6px 1px;
+  flex: 1;
+  border-radius: 3px;
+  border: none;
+  padding: 5px 2px;
+  box-sizing: border-box;
+  background-color: #fffcfcdd;
+  width: 6%;
+}
+
+.input_reajuste::placeholder {
+  font-size: 12px;
+  color: rgba(128, 128, 128, 0.712);
+  opacity: 1;
 }
 
 .input_ampliaciones {
@@ -488,4 +545,78 @@ main {
   padding: 5px 10PX;
   box-sizing: border-box;
   background-color: #fffcfcdd;
+}
+
+/* IMPRIMIR*/
+
+@media print {
+
+
+  .no-print {
+    display: none;
+  }
+
+  .box_principal {
+    display: grid;
+    grid-template-columns: 1% 99%;
+    min-height: 85vh;
+  }
+
+  .barra_lateral {
+    width: auto;
+    box-shadow: none;
+  }
+
+  .div_row {
+    padding: 8px 8px;
+    background-color: #a6b2ac7b;
+    border-radius: 5px;
+    margin: 13px 0;
+    width: 100%;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .div_row2 {
+    padding: 8px 8px;
+    background-color: #78857ee6;
+    border-radius: 5px;
+    margin: 13px 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .money_campos {
+    min-width: 10%;
+    max-width: 90px;
+    border-radius: 3px;
+    border: none;
+    padding: 3px 3px;
+    box-sizing: border-box;
+    background-color: #fffcfcdd;
+    margin: 0 30px 0 3px;
+  }
+
+  .label_oculto {
+    display: inline;
+    font-size: 16px;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+
+  .dias_campo {
+    width: 40px;
+    border-radius: 3px;
+    border: none;
+    padding: 3px 3PX;
+    box-sizing: border-box;
+    background-color: #fffcfcdd;
+    margin: 0 2px 0 2px;
+    text-align: end;
+  }
+
+  .box_button_delete_guardar {
+    display: none;
+  }
+
 }

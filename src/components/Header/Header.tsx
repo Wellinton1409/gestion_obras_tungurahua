@@ -24,6 +24,9 @@ const Header = () => {
             <div className="headerImg">
                 <img src='/logoGADcirculo.png' />
             </div>
+            <div className='titulo_oculto'>
+                INFORME DE PROYECTO
+            </div>
             <nav className="barraNavegacion">
                 <ul>
                     {links}

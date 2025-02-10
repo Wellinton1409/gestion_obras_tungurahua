@@ -1,5 +1,4 @@
 .header {
-    /*background-color: #003618;*/
     background-color: #004D25;
     border: 0px;
     border-radius: 0%;
@@ -127,4 +126,34 @@
     width: 100%;
     position: relative;
 
+}
+
+.titulo_oculto {
+    display: none;
+}
+
+/*Imprimir*/
+@media print {
+    .barraNavegacion {
+        display: none;
+    }
+
+    .titulo_oculto {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .header {
+        border: 0px;
+        border-radius: 0%;
+        width: 100%;
+        min-height: 80px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        justify-content: center;
+        box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.5);
+    }
 }

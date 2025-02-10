@@ -32,3 +32,10 @@
     height: 5px;
     width: 100%;
 }
+
+/*Imprimir*/
+@media print {
+    .contenedor {
+        display: none;
+    }
+}

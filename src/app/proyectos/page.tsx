@@ -36,17 +36,37 @@ const Proyectos: React.FC = () => {
         actaProvisional: "",
         actaDefinitiva: "",
         planillas: [],
+        reajustes: [],
         ampliaciones: [],
         incremVolumenes: "",
         contrComplementario: "",
         estadoActproyecto: "",
+        plazo: "",
+        fchAnticipo: "",
+        fchInicio: "",
+        fchTerminacion: "",
+        costoPorcent: "",
+        observ: ""
     };
     const [nuevoProyecto, setNuevoProyecto] = useState<any>(initialProyecto);
     const [mensajeError, setMensajeError] = useState("");
 
-    // useEffect(() => {
-    //     if (typeof window === "undefined") return; // Asegura que solo se ejecute en el cliente
-    // }, []);
+    useEffect(() => {
+        if (nuevoProyecto.fchInicio && nuevoProyecto.plazo) {
+            const fechaInicio = new Date(nuevoProyecto.fchInicio);
+            const diasPlazo = parseInt(nuevoProyecto.plazo, 10);
+
+            if (!isNaN(diasPlazo)) {
+                fechaInicio.setDate(fechaInicio.getDate() + diasPlazo);
+                const fechaTerminacion = fechaInicio.toISOString().split("T")[0]; // Formato YYYY-MM-DD
+
+                setNuevoProyecto((prev: any) => ({
+                    ...prev,
+                    fchTerminacion: fechaTerminacion,
+                }));
+            }
+        }
+    }, [nuevoProyecto.fchInicio, nuevoProyecto.plazo]);
 
     // Obtener proyectos por cédula
     const buscarProyectos = async () => {
@@ -156,10 +176,30 @@ const Proyectos: React.FC = () => {
         }
     };
 
+    const formatearNumerosDollar = (inputValue: string): string => {
+        let numericValue = inputValue.replace(/[^0-9,]/g, "");
+
+        const parts = numericValue.split(",");
+        const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear miles con puntos
+        const decimalPart = parts[1] !== undefined ? "," + parts[1].slice(0, 2) : "";
+
+        return integerPart + decimalPart;
+    };
+
+    const calcularTotal = (valores: string[]) => {
+        const total = valores
+            .map((v) => v.replace(/\./g, "").replace(",", ".")) // Convierte a formato numérico correcto
+            .map((v) => parseFloat(v) || 0) // Convierte a número
+            .reduce((acc, num) => acc + num, 0); // Suma total
+
+        return new Intl.NumberFormat("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(total);
+    };
+
+
     return (
         <div className="box_principal">
             <div className="barra_lateral">
-                <div className="flex space-x-4 mb-4">
+                <div className="flex space-x-4 mb-4 no-print">
                     <br />
                     <br />
                     <div className="formTitulo">
@@ -185,11 +225,11 @@ const Proyectos: React.FC = () => {
                 {mensajeError && <p className="mensajeError">{mensajeError}</p>}
                 {/* Lista de proyectos */}
                 <br />
-                <div style={{ padding: "0 6%" }}>
+                <div style={{ padding: "0 6%" }} className="no-print">
                     <strong>Proyectos:</strong>
                 </div>
                 <br />
-                <div className="listadoProyectos">
+                <div className="listadoProyectos no-print">
                     {proyectos.map((proyecto) => (
                         <button
                             key={proyecto.id}
@@ -202,26 +242,25 @@ const Proyectos: React.FC = () => {
                 </div>
                 <br />
                 <br />
-                <button onClick={crearProyecto} className="buttonCrear">
+                <button onClick={crearProyecto} className="buttonCrear no-print">
                     Crear Nuevo Proyecto
                 </button>
             </div>
             <div className="container_principal">
                 <br />
-                <h1 className="box_title">PROYECTOS</h1>
+                <h1 className="box_title no-print">PROYECTOS</h1>
                 {/* Formulario del proyecto */}
-                <div className="border p-4 rounded bg-gray-50">
-
+                <div>
                     <form>
                         {/* Botón Guardar */}
                         <div className="encabezado_formulario">
-                            <h3 className="subtituloProyectos">Formulario del Proyecto</h3>
+                            <h3 className="subtituloProyectos no-print">Formulario del Proyecto</h3>
 
                             <div className="boxGuardar">
                                 <button
                                     type="button"
                                     onClick={guardarProyecto}
-                                    className="buttonActualizar"
+                                    className="buttonActualizar no-print"
                                 >
                                     Guardar Cambios
                                 </button>
@@ -327,14 +366,7 @@ const Proyectos: React.FC = () => {
                                         type="text"
                                         value={nuevoProyecto.presupuesto || ""}
                                         onChange={(e) => {
-                                            const inputValue1 = e.target.value;
-                                            let numericValue1 = inputValue1.replace(/[^0-9,]/g, "");
-
-                                            const parts1 = numericValue1.split(",");
-                                            const integerPart1 = parts1[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear miles con puntos
-                                            const decimalPart1 = parts1[1] !== undefined ? "," + parts1[1].slice(0, 2) : "";
-
-                                            const formattedValue1 = integerPart1 + decimalPart1;
+                                            const formattedValue1 = formatearNumerosDollar(e.target.value);
                                             setNuevoProyecto({
                                                 ...nuevoProyecto,
                                                 presupuesto: formattedValue1,
@@ -351,14 +383,7 @@ const Proyectos: React.FC = () => {
                                         type="text"
                                         value={nuevoProyecto.avance}
                                         onChange={(e) => {
-                                            const inputValue2 = e.target.value;
-                                            let numericValue2 = inputValue2.replace(/[^0-9,]/g, "");
-
-                                            const parts2 = numericValue2.split(",");
-                                            const integerPart2 = parts2[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear miles con puntos
-                                            const decimalPart2 = parts2[1] !== undefined ? "," + parts2[1].slice(0, 2) : "";
-
-                                            const formattedValue2 = integerPart2 + decimalPart2;
+                                            const formattedValue2 = formatearNumerosDollar(e.target.value);
                                             setNuevoProyecto({
                                                 ...nuevoProyecto,
                                                 avance: formattedValue2,
@@ -424,8 +449,11 @@ const Proyectos: React.FC = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className="label_campo">
+                                    <label className="label_campo no-print">
                                         Fecha estimada de adjudicación:
+                                    </label>
+                                    <label className="label_oculto">
+                                        Fecha estimada adjudicación:
                                     </label>
                                     <input
                                         type="date"
@@ -540,9 +568,9 @@ const Proyectos: React.FC = () => {
                             </div>
 
                             {/* PLANILLAS */}
-                            <div className="div_row campo_container">
+                            <div className="div_row campo_container_planillas">
                                 <label className="label_campo">
-                                    Planillas:
+                                    Planillas y Reajustes
                                 </label>
                                 <div className="filaFormulario">
                                     <div className="input_group">
@@ -551,18 +579,11 @@ const Proyectos: React.FC = () => {
                                             type="text"
                                             value={nuevoProyecto.planillas[0] || ""}
                                             onChange={(e) => {
-                                                const inputValue = e.target.value;
-                                                let numericValue = inputValue.replace(/[^0-9,]/g, "");
-
-                                                const parts = numericValue.split(",");
-                                                const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear miles con puntos
-                                                const decimalPart = parts[1] !== undefined ? "," + parts[1].slice(0, 2) : "";
-
-                                                const formattedValue = integerPart + decimalPart;
+                                                const formattedValuep1 = formatearNumerosDollar(e.target.value);
                                                 setNuevoProyecto({
                                                     ...nuevoProyecto,
                                                     planillas: [
-                                                        formattedValue,
+                                                        formattedValuep1,
                                                         ...nuevoProyecto.planillas.slice(1),
                                                     ],
                                                 });
@@ -573,21 +594,31 @@ const Proyectos: React.FC = () => {
                                         <span>$</span>
                                         <input
                                             type="text"
+                                            value={nuevoProyecto.reajustes[0] || ""}
+                                            onChange={(e) => {
+                                                const formattedValuer1 = formatearNumerosDollar(e.target.value);
+                                                setNuevoProyecto({
+                                                    ...nuevoProyecto,
+                                                    reajustes: [
+                                                        formattedValuer1,
+                                                        ...nuevoProyecto.reajustes.slice(1),
+                                                    ],
+                                                });
+                                            }}
+                                            className="input_reajuste"
+                                            placeholder="Reajuste 1"
+                                        />
+                                        <span>$</span>
+                                        <input
+                                            type="text"
                                             value={nuevoProyecto.planillas[1] || ""}
                                             onChange={(e) => {
-                                                const inputValue = e.target.value;
-                                                let numericValue = inputValue.replace(/[^0-9,]/g, "");
-
-                                                const parts = numericValue.split(",");
-                                                const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear miles con puntos
-                                                const decimalPart = parts[1] !== undefined ? "," + parts[1].slice(0, 2) : "";
-
-                                                const formattedValue = integerPart + decimalPart;
+                                                const formattedValuep2 = formatearNumerosDollar(e.target.value);
                                                 setNuevoProyecto({
                                                     ...nuevoProyecto,
                                                     planillas: [
                                                         nuevoProyecto.planillas[0],
-                                                        formattedValue,
+                                                        formattedValuep2,
                                                         ...nuevoProyecto.planillas.slice(2),
                                                     ],
                                                 });
@@ -598,22 +629,33 @@ const Proyectos: React.FC = () => {
                                         <span>$</span>
                                         <input
                                             type="text"
+                                            value={nuevoProyecto.reajustes[1] || ""}
+                                            onChange={(e) => {
+                                                const formattedValuer2 = formatearNumerosDollar(e.target.value);
+                                                setNuevoProyecto({
+                                                    ...nuevoProyecto,
+                                                    reajustes: [
+                                                        nuevoProyecto.reajustes[0],
+                                                        formattedValuer2,
+                                                        ...nuevoProyecto.reajustes.slice(2),
+                                                    ],
+                                                });
+                                            }}
+                                            className="input_reajuste"
+                                            placeholder="Reajuste 2"
+                                        />
+                                        <span>$</span>
+                                        <input
+                                            type="text"
                                             value={nuevoProyecto.planillas[2] || ""}
                                             onChange={(e) => {
-                                                const inputValue = e.target.value;
-                                                let numericValue = inputValue.replace(/[^0-9,]/g, "");
-
-                                                const parts = numericValue.split(",");
-                                                const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear miles con puntos
-                                                const decimalPart = parts[1] !== undefined ? "," + parts[1].slice(0, 2) : "";
-
-                                                const formattedValue = integerPart + decimalPart;
+                                                const formattedValuep3 = formatearNumerosDollar(e.target.value);
                                                 setNuevoProyecto({
                                                     ...nuevoProyecto,
                                                     planillas: [
                                                         nuevoProyecto.planillas[0],
                                                         nuevoProyecto.planillas[1],
-                                                        formattedValue,
+                                                        formattedValuep3,
                                                         ...nuevoProyecto.planillas.slice(3),
                                                     ],
                                                 });
@@ -624,23 +666,35 @@ const Proyectos: React.FC = () => {
                                         <span>$</span>
                                         <input
                                             type="text"
+                                            value={nuevoProyecto.reajustes[2] || ""}
+                                            onChange={(e) => {
+                                                const formattedValuer3 = formatearNumerosDollar(e.target.value);
+                                                setNuevoProyecto({
+                                                    ...nuevoProyecto,
+                                                    reajustes: [
+                                                        nuevoProyecto.reajustes[0],
+                                                        nuevoProyecto.reajustes[1],
+                                                        formattedValuer3,
+                                                        ...nuevoProyecto.reajustes.slice(3),
+                                                    ],
+                                                });
+                                            }}
+                                            className="input_reajuste"
+                                            placeholder="Reajuste 3"
+                                        />
+                                        <span>$</span>
+                                        <input
+                                            type="text"
                                             value={nuevoProyecto.planillas[3] || ""}
                                             onChange={(e) => {
-                                                const inputValue = e.target.value;
-                                                let numericValue = inputValue.replace(/[^0-9,]/g, "");
-
-                                                const parts = numericValue.split(",");
-                                                const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear miles con puntos
-                                                const decimalPart = parts[1] !== undefined ? "," + parts[1].slice(0, 2) : "";
-
-                                                const formattedValue = integerPart + decimalPart;
+                                                const formattedValuep4 = formatearNumerosDollar(e.target.value);
                                                 setNuevoProyecto({
                                                     ...nuevoProyecto,
                                                     planillas: [
                                                         nuevoProyecto.planillas[0],
                                                         nuevoProyecto.planillas[1],
                                                         nuevoProyecto.planillas[2],
-                                                        formattedValue,
+                                                        formattedValuep4,
                                                         ...nuevoProyecto.planillas.slice(4),
                                                     ],
                                                 });
@@ -651,16 +705,29 @@ const Proyectos: React.FC = () => {
                                         <span>$</span>
                                         <input
                                             type="text"
+                                            value={nuevoProyecto.reajustes[3] || ""}
+                                            onChange={(e) => {
+                                                const formattedValuer4 = formatearNumerosDollar(e.target.value);
+                                                setNuevoProyecto({
+                                                    ...nuevoProyecto,
+                                                    reajustes: [
+                                                        nuevoProyecto.reajustes[0],
+                                                        nuevoProyecto.reajustes[1],
+                                                        nuevoProyecto.reajustes[2],
+                                                        formattedValuer4,
+                                                        ...nuevoProyecto.reajustes.slice(4),
+                                                    ],
+                                                });
+                                            }}
+                                            className="input_reajuste"
+                                            placeholder="Reajuste 4"
+                                        />
+                                        <span>$</span>
+                                        <input
+                                            type="text"
                                             value={nuevoProyecto.planillas[4] || ""}
                                             onChange={(e) => {
-                                                const inputValue = e.target.value;
-                                                let numericValue = inputValue.replace(/[^0-9,]/g, "");
-
-                                                const parts = numericValue.split(",");
-                                                const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear miles con puntos
-                                                const decimalPart = parts[1] !== undefined ? "," + parts[1].slice(0, 2) : "";
-
-                                                const formattedValue = integerPart + decimalPart;
+                                                const formattedValuep5 = formatearNumerosDollar(e.target.value);
                                                 setNuevoProyecto({
                                                     ...nuevoProyecto,
                                                     planillas: [
@@ -668,7 +735,7 @@ const Proyectos: React.FC = () => {
                                                         nuevoProyecto.planillas[1],
                                                         nuevoProyecto.planillas[2],
                                                         nuevoProyecto.planillas[3],
-                                                        formattedValue,
+                                                        formattedValuep5,
                                                         ...nuevoProyecto.planillas.slice(5),
                                                     ],
                                                 });
@@ -679,16 +746,30 @@ const Proyectos: React.FC = () => {
                                         <span>$</span>
                                         <input
                                             type="text"
+                                            value={nuevoProyecto.reajustes[4] || ""}
+                                            onChange={(e) => {
+                                                const formattedValuer5 = formatearNumerosDollar(e.target.value);
+                                                setNuevoProyecto({
+                                                    ...nuevoProyecto,
+                                                    reajustes: [
+                                                        nuevoProyecto.reajustes[0],
+                                                        nuevoProyecto.reajustes[1],
+                                                        nuevoProyecto.reajustes[2],
+                                                        nuevoProyecto.reajustes[3],
+                                                        formattedValuer5,
+                                                        ...nuevoProyecto.reajustes.slice(5),
+                                                    ],
+                                                });
+                                            }}
+                                            className="input_reajuste"
+                                            placeholder="Reajuste 5"
+                                        />
+                                        <span>$</span>
+                                        <input
+                                            type="text"
                                             value={nuevoProyecto.planillas[5] || ""}
                                             onChange={(e) => {
-                                                const inputValue = e.target.value;
-                                                let numericValue = inputValue.replace(/[^0-9,]/g, "");
-
-                                                const parts = numericValue.split(",");
-                                                const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear miles con puntos
-                                                const decimalPart = parts[1] !== undefined ? "," + parts[1].slice(0, 2) : "";
-
-                                                const formattedValue = integerPart + decimalPart;
+                                                const formattedValuep6 = formatearNumerosDollar(e.target.value);
                                                 setNuevoProyecto({
                                                     ...nuevoProyecto,
                                                     planillas: [
@@ -697,13 +778,35 @@ const Proyectos: React.FC = () => {
                                                         nuevoProyecto.planillas[2],
                                                         nuevoProyecto.planillas[3],
                                                         nuevoProyecto.planillas[4],
-                                                        formattedValue,
+                                                        formattedValuep6,
                                                         ...nuevoProyecto.planillas.slice(6),
                                                     ],
                                                 });
                                             }}
                                             className="input_planillas"
                                             placeholder="Planilla 6"
+                                        />
+                                        <span>$</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoProyecto.reajustes[5] || ""}
+                                            onChange={(e) => {
+                                                const formattedValuer6 = formatearNumerosDollar(e.target.value);
+                                                setNuevoProyecto({
+                                                    ...nuevoProyecto,
+                                                    reajustes: [
+                                                        nuevoProyecto.reajustes[0],
+                                                        nuevoProyecto.reajustes[1],
+                                                        nuevoProyecto.reajustes[2],
+                                                        nuevoProyecto.reajustes[3],
+                                                        nuevoProyecto.reajustes[4],
+                                                        formattedValuer6,
+                                                        ...nuevoProyecto.reajustes.slice(6),
+                                                    ],
+                                                });
+                                            }}
+                                            className="input_reajuste"
+                                            placeholder="Reajuste 6"
                                         />
                                     </div>
 
@@ -715,19 +818,12 @@ const Proyectos: React.FC = () => {
                                             type="text"
                                             value={nuevoProyecto.planillas[6] || ""}
                                             onChange={(e) => {
-                                                const inputValue = e.target.value;
-                                                let numericValue = inputValue.replace(/[^0-9,]/g, "");
-
-                                                const parts = numericValue.split(",");
-                                                const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear miles con puntos
-                                                const decimalPart = parts[1] !== undefined ? "," + parts[1].slice(0, 2) : "";
-
-                                                const formattedValue = integerPart + decimalPart;
+                                                const formattedValuep7 = formatearNumerosDollar(e.target.value);
                                                 setNuevoProyecto({
                                                     ...nuevoProyecto,
                                                     planillas: [
                                                         ...nuevoProyecto.planillas.slice(0, 6),
-                                                        formattedValue,
+                                                        formattedValuep7,
                                                         ...nuevoProyecto.planillas.slice(7),
                                                     ],
                                                 });
@@ -738,21 +834,32 @@ const Proyectos: React.FC = () => {
                                         <span>$</span>
                                         <input
                                             type="text"
+                                            value={nuevoProyecto.reajustes[6] || ""}
+                                            onChange={(e) => {
+                                                const formattedValuer7 = formatearNumerosDollar(e.target.value);
+                                                setNuevoProyecto({
+                                                    ...nuevoProyecto,
+                                                    reajustes: [
+                                                        ...nuevoProyecto.reajustes.slice(0, 6),
+                                                        formattedValuer7,
+                                                        ...nuevoProyecto.reajustes.slice(7),
+                                                    ],
+                                                });
+                                            }}
+                                            className="input_reajuste"
+                                            placeholder="Reajuste 7"
+                                        />
+                                        <span>$</span>
+                                        <input
+                                            type="text"
                                             value={nuevoProyecto.planillas[7] || ""}
                                             onChange={(e) => {
-                                                const inputValue = e.target.value;
-                                                let numericValue = inputValue.replace(/[^0-9,]/g, "");
-
-                                                const parts = numericValue.split(",");
-                                                const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear miles con puntos
-                                                const decimalPart = parts[1] !== undefined ? "," + parts[1].slice(0, 2) : "";
-
-                                                const formattedValue = integerPart + decimalPart;
+                                                const formattedValuep8 = formatearNumerosDollar(e.target.value);
                                                 setNuevoProyecto({
                                                     ...nuevoProyecto,
                                                     planillas: [
                                                         ...nuevoProyecto.planillas.slice(0, 7),
-                                                        formattedValue,
+                                                        formattedValuep8,
                                                         ...nuevoProyecto.planillas.slice(8),
                                                     ],
                                                 });
@@ -763,21 +870,32 @@ const Proyectos: React.FC = () => {
                                         <span>$</span>
                                         <input
                                             type="text"
+                                            value={nuevoProyecto.reajustes[7] || ""}
+                                            onChange={(e) => {
+                                                const formattedValuer8 = formatearNumerosDollar(e.target.value);
+                                                setNuevoProyecto({
+                                                    ...nuevoProyecto,
+                                                    reajustes: [
+                                                        ...nuevoProyecto.reajustes.slice(0, 7),
+                                                        formattedValuer8,
+                                                        ...nuevoProyecto.reajustes.slice(8),
+                                                    ],
+                                                });
+                                            }}
+                                            className="input_reajuste"
+                                            placeholder="Reajuste 8"
+                                        />
+                                        <span>$</span>
+                                        <input
+                                            type="text"
                                             value={nuevoProyecto.planillas[8] || ""}
                                             onChange={(e) => {
-                                                const inputValue = e.target.value;
-                                                let numericValue = inputValue.replace(/[^0-9,]/g, "");
-
-                                                const parts = numericValue.split(",");
-                                                const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear miles con puntos
-                                                const decimalPart = parts[1] !== undefined ? "," + parts[1].slice(0, 2) : "";
-
-                                                const formattedValue = integerPart + decimalPart;
+                                                const formattedValuep9 = formatearNumerosDollar(e.target.value);
                                                 setNuevoProyecto({
                                                     ...nuevoProyecto,
                                                     planillas: [
                                                         ...nuevoProyecto.planillas.slice(0, 8),
-                                                        formattedValue,
+                                                        formattedValuep9,
                                                         ...nuevoProyecto.planillas.slice(9),
                                                     ],
                                                 });
@@ -788,21 +906,32 @@ const Proyectos: React.FC = () => {
                                         <span>$</span>
                                         <input
                                             type="text"
+                                            value={nuevoProyecto.reajustes[8] || ""}
+                                            onChange={(e) => {
+                                                const formattedValuer9 = formatearNumerosDollar(e.target.value);
+                                                setNuevoProyecto({
+                                                    ...nuevoProyecto,
+                                                    reajustes: [
+                                                        ...nuevoProyecto.reajustes.slice(0, 8),
+                                                        formattedValuer9,
+                                                        ...nuevoProyecto.reajustes.slice(9),
+                                                    ],
+                                                });
+                                            }}
+                                            className="input_reajuste"
+                                            placeholder="Reajuste 9"
+                                        />
+                                        <span>$</span>
+                                        <input
+                                            type="text"
                                             value={nuevoProyecto.planillas[9] || ""}
                                             onChange={(e) => {
-                                                const inputValue = e.target.value;
-                                                let numericValue = inputValue.replace(/[^0-9,]/g, "");
-
-                                                const parts = numericValue.split(",");
-                                                const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear miles con puntos
-                                                const decimalPart = parts[1] !== undefined ? "," + parts[1].slice(0, 2) : "";
-
-                                                const formattedValue = integerPart + decimalPart;
+                                                const formattedValuep10 = formatearNumerosDollar(e.target.value);
                                                 setNuevoProyecto({
                                                     ...nuevoProyecto,
                                                     planillas: [
                                                         ...nuevoProyecto.planillas.slice(0, 9),
-                                                        formattedValue,
+                                                        formattedValuep10,
                                                         ...nuevoProyecto.planillas.slice(10),
                                                     ],
                                                 });
@@ -813,21 +942,32 @@ const Proyectos: React.FC = () => {
                                         <span>$</span>
                                         <input
                                             type="text"
+                                            value={nuevoProyecto.reajustes[9] || ""}
+                                            onChange={(e) => {
+                                                const formattedValuer10 = formatearNumerosDollar(e.target.value);
+                                                setNuevoProyecto({
+                                                    ...nuevoProyecto,
+                                                    reajustes: [
+                                                        ...nuevoProyecto.reajustes.slice(0, 9),
+                                                        formattedValuer10,
+                                                        ...nuevoProyecto.reajustes.slice(10),
+                                                    ],
+                                                });
+                                            }}
+                                            className="input_reajuste"
+                                            placeholder="Reajuste 10"
+                                        />
+                                        <span>$</span>
+                                        <input
+                                            type="text"
                                             value={nuevoProyecto.planillas[10] || ""}
                                             onChange={(e) => {
-                                                const inputValue = e.target.value;
-                                                let numericValue = inputValue.replace(/[^0-9,]/g, "");
-
-                                                const parts = numericValue.split(",");
-                                                const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear miles con puntos
-                                                const decimalPart = parts[1] !== undefined ? "," + parts[1].slice(0, 2) : "";
-
-                                                const formattedValue = integerPart + decimalPart;
+                                                const formattedValuep11 = formatearNumerosDollar(e.target.value);
                                                 setNuevoProyecto({
                                                     ...nuevoProyecto,
                                                     planillas: [
                                                         ...nuevoProyecto.planillas.slice(0, 10),
-                                                        formattedValue,
+                                                        formattedValuep11,
                                                         ...nuevoProyecto.planillas.slice(11),
                                                     ],
                                                 });
@@ -838,31 +978,148 @@ const Proyectos: React.FC = () => {
                                         <span>$</span>
                                         <input
                                             type="text"
+                                            value={nuevoProyecto.reajustes[10] || ""}
+                                            onChange={(e) => {
+                                                const formattedValuer11 = formatearNumerosDollar(e.target.value);
+                                                setNuevoProyecto({
+                                                    ...nuevoProyecto,
+                                                    reajustes: [
+                                                        ...nuevoProyecto.reajustes.slice(0, 10),
+                                                        formattedValuer11,
+                                                        ...nuevoProyecto.reajustes.slice(11),
+                                                    ],
+                                                });
+                                            }}
+                                            className="input_reajuste"
+                                            placeholder="Reajuste 11"
+                                        />
+                                        <span>$</span>
+                                        <input
+                                            type="text"
                                             value={nuevoProyecto.planillas[11] || ""}
                                             onChange={(e) => {
-                                                const inputValue = e.target.value;
-                                                let numericValue = inputValue.replace(/[^0-9,]/g, "");
-
-                                                const parts = numericValue.split(",");
-                                                const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear miles con puntos
-                                                const decimalPart = parts[1] !== undefined ? "," + parts[1].slice(0, 2) : "";
-
-                                                const formattedValue = integerPart + decimalPart;
+                                                const formattedValuep12 = formatearNumerosDollar(e.target.value);
                                                 setNuevoProyecto({
                                                     ...nuevoProyecto,
                                                     planillas: [
                                                         ...nuevoProyecto.planillas.slice(0, 11),
-                                                        formattedValue,
+                                                        formattedValuep12,
                                                     ],
                                                 });
                                             }}
                                             className="input_planillas"
                                             placeholder="Planilla 12"
                                         />
+                                        <span>$</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoProyecto.reajustes[11] || ""}
+                                            onChange={(e) => {
+                                                const formattedValuer12 = formatearNumerosDollar(e.target.value);
+                                                setNuevoProyecto({
+                                                    ...nuevoProyecto,
+                                                    reajustes: [
+                                                        ...nuevoProyecto.reajustes.slice(0, 11),
+                                                        formattedValuer12,
+                                                    ],
+                                                });
+                                            }}
+                                            className="input_reajuste"
+                                            placeholder="Reajuste 12"
+                                        />
+                                    </div>
+                                    <div className="input_group">
+                                        <div className="box_dos_centrados">
+                                            <div className="campo_container">
+                                                <label className="label_campo">
+                                                    <strong>Planilla total:</strong>
+                                                </label>
+                                                <span>$ {calcularTotal(nuevoProyecto.planillas)}</span>
+                                            </div>
+                                            <div className="campo_container">
+                                                <label className="label_campo">
+                                                    <strong>Reajuste total:</strong>
+                                                </label>
+                                                <span>$ {calcularTotal(nuevoProyecto.reajustes)}</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
+                            <div className="box_cuatro div_row">
+                                <div className="campo_container">
+                                    <label className="label_campo no-print">
+                                        Fecha anticipo:
+                                    </label>
+                                    <label className="label_oculto">
+                                        Anticipo:
+                                    </label>
+                                    <input
+                                        type="date"
+                                        value={nuevoProyecto.fchAnticipo || ""}
+                                        onChange={(e) =>
+                                            setNuevoProyecto({
+                                                ...nuevoProyecto,
+                                                fchAnticipo: e.target.value,
+                                            })
+                                        }
+                                        className="input_campos"
+                                    />
+                                </div>
+                                <div className="campo_container">
+                                    <label className="label_campo no-print">
+                                        Fecha inicio:
+                                    </label>
+                                    <label className="label_oculto">
+                                        Inicio:
+                                    </label>
+                                    <input
+                                        type="date"
+                                        value={nuevoProyecto.fchInicio || ""}
+                                        onChange={(e) =>
+                                            setNuevoProyecto({
+                                                ...nuevoProyecto,
+                                                fchInicio: e.target.value,
+                                            })
+                                        }
+                                        className="input_campos"
+                                    />
+                                </div>
+                                <div className="campo_container">
+                                    <label className="label_campo">
+                                        Plazo:
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={nuevoProyecto.plazo || ""}
+                                        onChange={(e) => {
+                                            const inputValue = e.target.value;
+                                            let numericValue = inputValue.replace(/[^0-9]/g, "");
+                                            setNuevoProyecto({
+                                                ...nuevoProyecto,
+                                                plazo: numericValue,
+                                            });
+                                        }}
+                                        className="dias_campo"
+                                    />
+                                    <span>días</span>
+                                </div>
+                                <div className="campo_container">
+                                    <label className="label_campo no-print">
+                                        Fecha terminación:
+                                    </label>
+                                    <label className="label_oculto">
+                                        Terminación:
+                                    </label>
+                                    <input
+                                        type="date"
+                                        value={nuevoProyecto.fchTerminacion || ""}
+                                        readOnly
+                                        className="input_campos"
+                                    />
+                                </div>
+                            </div>
 
                             {/* AMPLIACIONES */}
                             <div className="div_row campo_container">
@@ -982,7 +1239,26 @@ const Proyectos: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="box_dos div_row">
+                            <div className="box_tres div_row">
+                                <div className="campo_container">
+                                    <label className="label_campo">
+                                        Costo + Porcentaje:
+                                    </label>
+                                    <span>$ </span>
+                                    <input
+                                        type="text"
+                                        value={nuevoProyecto.costoPorcent || ""}
+                                        onChange={(e) => {
+                                            const formattedValueCost = formatearNumerosDollar(e.target.value);
+                                            setNuevoProyecto({
+                                                ...nuevoProyecto,
+                                                costoPorcent: formattedValueCost,
+                                            });
+                                        }}
+                                        className="money_campos"
+                                    />
+
+                                </div>
                                 <div className="campo_container">
                                     <label className="label_campo">
                                         Incremento volumenes:
@@ -992,14 +1268,7 @@ const Proyectos: React.FC = () => {
                                         type="text"
                                         value={nuevoProyecto.incremVolumenes || ""}
                                         onChange={(e) => {
-                                            const inputVolum = e.target.value;
-                                            let numericValueVol = inputVolum.replace(/[^0-9,]/g, "");
-
-                                            const parts1 = numericValueVol.split(",");
-                                            const integerPart1 = parts1[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear miles con puntos
-                                            const decimalPart1 = parts1[1] !== undefined ? "," + parts1[1].slice(0, 2) : "";
-
-                                            const formattedValueVol = integerPart1 + decimalPart1;
+                                            const formattedValueVol = formatearNumerosDollar(e.target.value);
                                             setNuevoProyecto({
                                                 ...nuevoProyecto,
                                                 incremVolumenes: formattedValueVol,
@@ -1007,7 +1276,6 @@ const Proyectos: React.FC = () => {
                                         }}
                                         className="money_campos"
                                     />
-
                                 </div>
                                 <div className="campo_container">
                                     <label className="label_campo">
@@ -1018,14 +1286,7 @@ const Proyectos: React.FC = () => {
                                         type="text"
                                         value={nuevoProyecto.contrComplementario || ""}
                                         onChange={(e) => {
-                                            const inputComplementario = e.target.value;
-                                            let numericValueCompl = inputComplementario.replace(/[^0-9,]/g, "");
-
-                                            const parts1 = numericValueCompl.split(",");
-                                            const integerPart1 = parts1[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear miles con puntos
-                                            const decimalPart1 = parts1[1] !== undefined ? "," + parts1[1].slice(0, 2) : "";
-
-                                            const formattedValueCompl = integerPart1 + decimalPart1;
+                                            const formattedValueCompl = formatearNumerosDollar(e.target.value);
                                             setNuevoProyecto({
                                                 ...nuevoProyecto,
                                                 contrComplementario: formattedValueCompl,
@@ -1052,26 +1313,42 @@ const Proyectos: React.FC = () => {
                                     className="input_campos"
                                 />
                             </div>
+                            <div className="div_row campo_container">
+                                <label className="label_campo">
+                                    <strong>Observaciones:</strong>
+                                </label>
+                                <input
+                                    type="text"
+                                    value={nuevoProyecto.observ || ""}
+                                    onChange={(e) =>
+                                        setNuevoProyecto({
+                                            ...nuevoProyecto,
+                                            observ: e.target.value,
+                                        })
+                                    }
+                                    className="input_campos"
+                                />
+                            </div>
                         </div>
                         <div className="box_button_delete_guardar">
                             <button
                                 type="button"
                                 onClick={eliminarProyecto}
-                                className="button_eliminar"
+                                className="button_eliminar no-print"
                             >
                                 Eliminar Proyecto
                             </button>
+
                             <button
                                 type="button"
-                                onClick={guardarProyecto}
-                                className="buttonActualizar"
-                            >
-                                Guardar Cambios
+                                onClick={() => window.print()}
+                                className="buttonActualizar no-print">
+                                Imprimir
                             </button>
                         </div>
 
                     </form>
-                </div>
+                </div >
             </div >
         </div >
     );
