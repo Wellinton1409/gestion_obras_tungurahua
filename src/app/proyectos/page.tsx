@@ -52,12 +52,19 @@ const Proyectos: React.FC = () => {
     const [mensajeError, setMensajeError] = useState("");
 
     useEffect(() => {
-        if (nuevoProyecto.fchInicio && nuevoProyecto.plazo) {
+        if (nuevoProyecto.fchInicio) {
             const fechaInicio = new Date(nuevoProyecto.fchInicio);
-            const diasPlazo = parseInt(nuevoProyecto.plazo, 10);
+            let diasPlazo = parseInt(nuevoProyecto.plazo, 10) || 0;
 
-            if (!isNaN(diasPlazo)) {
-                fechaInicio.setDate(fechaInicio.getDate() + diasPlazo);
+            // Sumar todas las ampliaciones
+            let diasAmpliaciones = nuevoProyecto.ampliaciones.reduce((total: number, dias: any) => {
+                return total + (parseInt(dias, 10) || 0);
+            }, 0);
+
+            // Calcular la nueva fecha de terminación
+            const totalDias = diasPlazo + diasAmpliaciones;
+            if (totalDias > 0) {
+                fechaInicio.setDate(fechaInicio.getDate() + totalDias);
                 const fechaTerminacion = fechaInicio.toISOString().split("T")[0]; // Formato YYYY-MM-DD
 
                 setNuevoProyecto((prev: any) => ({
@@ -66,7 +73,7 @@ const Proyectos: React.FC = () => {
                 }));
             }
         }
-    }, [nuevoProyecto.fchInicio, nuevoProyecto.plazo]);
+    }, [nuevoProyecto.fchInicio, nuevoProyecto.plazo, nuevoProyecto.ampliaciones]);
 
     // Obtener proyectos por cédula
     const buscarProyectos = async () => {
@@ -546,7 +553,6 @@ const Proyectos: React.FC = () => {
                                             })
                                         }
                                         className="input_campos"
-
                                     />
                                 </div>
                                 <div className="campo_container">
@@ -1127,115 +1133,121 @@ const Proyectos: React.FC = () => {
                                     Ampliaciones:
                                 </label>
                                 <div className="input_group_ampliaciones">
-                                    <input
-                                        type="text"
-                                        value={nuevoProyecto.ampliaciones[0] || ""}
-                                        onChange={(e) => {
-                                            const inputValue = e.target.value;
-                                            let numericValue = inputValue.replace(/[^0-9]/g, "");
-                                            setNuevoProyecto({
-                                                ...nuevoProyecto,
-                                                ampliaciones: [
-                                                    numericValue,
-                                                    nuevoProyecto.ampliaciones[1] || "",
-                                                    nuevoProyecto.ampliaciones[2] || "",
-                                                    nuevoProyecto.ampliaciones[3] || "",
-                                                    nuevoProyecto.ampliaciones[4] || "",
-                                                ],
-                                            });
-                                        }}
-                                        className="input_ampliaciones"
-                                        placeholder="Ampliación 1"
-                                    />
-                                    <span>días</span>
-
-                                    <input
-                                        type="text"
-                                        value={nuevoProyecto.ampliaciones[1] || ""}
-                                        onChange={(e) => {
-                                            const inputValue = e.target.value;
-                                            let numericValue = inputValue.replace(/[^0-9]/g, "");
-                                            setNuevoProyecto({
-                                                ...nuevoProyecto,
-                                                ampliaciones: [
-                                                    nuevoProyecto.ampliaciones[0] || "",
-                                                    numericValue,
-                                                    nuevoProyecto.ampliaciones[2] || "",
-                                                    nuevoProyecto.ampliaciones[3] || "",
-                                                    nuevoProyecto.ampliaciones[4] || "",
-                                                ],
-                                            });
-                                        }}
-                                        className="input_ampliaciones"
-                                        placeholder="Ampliación 2"
-                                    />
-                                    <span>días</span>
-
-                                    <input
-                                        type="text"
-                                        value={nuevoProyecto.ampliaciones[2] || ""}
-                                        onChange={(e) => {
-                                            const inputValue = e.target.value;
-                                            let numericValue = inputValue.replace(/[^0-9]/g, "");
-                                            setNuevoProyecto({
-                                                ...nuevoProyecto,
-                                                ampliaciones: [
-                                                    nuevoProyecto.ampliaciones[0] || "",
-                                                    nuevoProyecto.ampliaciones[1] || "",
-                                                    numericValue,
-                                                    nuevoProyecto.ampliaciones[3] || "",
-                                                    nuevoProyecto.ampliaciones[4] || "",
-                                                ],
-                                            });
-                                        }}
-                                        className="input_ampliaciones"
-                                        placeholder="Ampliación 3"
-                                    />
-                                    <span>días</span>
-
-                                    <input
-                                        type="text"
-                                        value={nuevoProyecto.ampliaciones[3] || ""}
-                                        onChange={(e) => {
-                                            const inputValue = e.target.value;
-                                            let numericValue = inputValue.replace(/[^0-9]/g, "");
-                                            setNuevoProyecto({
-                                                ...nuevoProyecto,
-                                                ampliaciones: [
-                                                    nuevoProyecto.ampliaciones[0] || "",
-                                                    nuevoProyecto.ampliaciones[1] || "",
-                                                    nuevoProyecto.ampliaciones[2] || "",
-                                                    numericValue,
-                                                    nuevoProyecto.ampliaciones[4] || "",
-                                                ],
-                                            });
-                                        }}
-                                        className="input_ampliaciones"
-                                        placeholder="Ampliación 4"
-                                    />
-                                    <span>días</span>
-
-                                    <input
-                                        type="text"
-                                        value={nuevoProyecto.ampliaciones[4] || ""}
-                                        onChange={(e) => {
-                                            const inputValue = e.target.value;
-                                            let numericValue = inputValue.replace(/[^0-9]/g, "");
-                                            setNuevoProyecto({
-                                                ...nuevoProyecto,
-                                                ampliaciones: [
-                                                    nuevoProyecto.ampliaciones[0] || "",
-                                                    nuevoProyecto.ampliaciones[1] || "",
-                                                    nuevoProyecto.ampliaciones[2] || "",
-                                                    nuevoProyecto.ampliaciones[3] || "",
-                                                    numericValue,
-                                                ],
-                                            });
-                                        }}
-                                        className="input_ampliaciones"
-                                        placeholder="Ampliación 5"
-                                    />
-                                    <span>días</span>
+                                    <div>
+                                        <input
+                                            type="text"
+                                            value={nuevoProyecto.ampliaciones[0] || ""}
+                                            onChange={(e) => {
+                                                const inputValue = e.target.value;
+                                                let numericValue = inputValue.replace(/[^0-9]/g, "");
+                                                setNuevoProyecto({
+                                                    ...nuevoProyecto,
+                                                    ampliaciones: [
+                                                        numericValue,
+                                                        nuevoProyecto.ampliaciones[1] || "",
+                                                        nuevoProyecto.ampliaciones[2] || "",
+                                                        nuevoProyecto.ampliaciones[3] || "",
+                                                        nuevoProyecto.ampliaciones[4] || "",
+                                                    ],
+                                                });
+                                            }}
+                                            className="input_ampliaciones"
+                                            placeholder="Ampliación 1"
+                                        />
+                                        <span>días</span>
+                                    </div>
+                                    <div>
+                                        <input
+                                            type="text"
+                                            value={nuevoProyecto.ampliaciones[1] || ""}
+                                            onChange={(e) => {
+                                                const inputValue = e.target.value;
+                                                let numericValue = inputValue.replace(/[^0-9]/g, "");
+                                                setNuevoProyecto({
+                                                    ...nuevoProyecto,
+                                                    ampliaciones: [
+                                                        nuevoProyecto.ampliaciones[0] || "",
+                                                        numericValue,
+                                                        nuevoProyecto.ampliaciones[2] || "",
+                                                        nuevoProyecto.ampliaciones[3] || "",
+                                                        nuevoProyecto.ampliaciones[4] || "",
+                                                    ],
+                                                });
+                                            }}
+                                            className="input_ampliaciones"
+                                            placeholder="Ampliación 2"
+                                        />
+                                        <span>días</span>
+                                    </div>
+                                    <div>
+                                        <input
+                                            type="text"
+                                            value={nuevoProyecto.ampliaciones[2] || ""}
+                                            onChange={(e) => {
+                                                const inputValue = e.target.value;
+                                                let numericValue = inputValue.replace(/[^0-9]/g, "");
+                                                setNuevoProyecto({
+                                                    ...nuevoProyecto,
+                                                    ampliaciones: [
+                                                        nuevoProyecto.ampliaciones[0] || "",
+                                                        nuevoProyecto.ampliaciones[1] || "",
+                                                        numericValue,
+                                                        nuevoProyecto.ampliaciones[3] || "",
+                                                        nuevoProyecto.ampliaciones[4] || "",
+                                                    ],
+                                                });
+                                            }}
+                                            className="input_ampliaciones"
+                                            placeholder="Ampliación 3"
+                                        />
+                                        <span>días</span>
+                                    </div>
+                                    <div>
+                                        <input
+                                            type="text"
+                                            value={nuevoProyecto.ampliaciones[3] || ""}
+                                            onChange={(e) => {
+                                                const inputValue = e.target.value;
+                                                let numericValue = inputValue.replace(/[^0-9]/g, "");
+                                                setNuevoProyecto({
+                                                    ...nuevoProyecto,
+                                                    ampliaciones: [
+                                                        nuevoProyecto.ampliaciones[0] || "",
+                                                        nuevoProyecto.ampliaciones[1] || "",
+                                                        nuevoProyecto.ampliaciones[2] || "",
+                                                        numericValue,
+                                                        nuevoProyecto.ampliaciones[4] || "",
+                                                    ],
+                                                });
+                                            }}
+                                            className="input_ampliaciones"
+                                            placeholder="Ampliación 4"
+                                        />
+                                        <span>días</span>
+                                    </div>
+                                    <div>
+                                        <input
+                                            type="text"
+                                            value={nuevoProyecto.ampliaciones[4] || ""}
+                                            onChange={(e) => {
+                                                const inputValue = e.target.value;
+                                                let numericValue = inputValue.replace(/[^0-9]/g, "");
+                                                setNuevoProyecto({
+                                                    ...nuevoProyecto,
+                                                    ampliaciones: [
+                                                        nuevoProyecto.ampliaciones[0] || "",
+                                                        nuevoProyecto.ampliaciones[1] || "",
+                                                        nuevoProyecto.ampliaciones[2] || "",
+                                                        nuevoProyecto.ampliaciones[3] || "",
+                                                        numericValue,
+                                                    ],
+                                                });
+                                            }}
+                                            className="input_ampliaciones"
+                                            placeholder="Ampliación 5"
+                                        />
+                                        <span>días</span>
+                                    </div>
                                 </div>
                             </div>
 

@@ -25,7 +25,7 @@ const Header = () => {
                 <img src='/logoGADcirculo.png' />
             </div>
             <div className='titulo_oculto'>
-                INFORME DE PROYECTO
+                <strong>INFORME DE PROYECTO</strong>
             </div>
             <nav className="barraNavegacion">
                 <ul>
