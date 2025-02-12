@@ -45,7 +45,11 @@ const Usuarios = () => {
                     <span className="label_texto_informes">Informe Personal:</span>
                     <div className="item_generar_pdf">
                         <span>Ingrese el código del Fiscalizador:</span>
-                        <input type="text" value={codigoInput} onChange={(e) => setCodigoInput(e.target.value)} className="IDbuscarPDF" />
+                        <input
+                            type="text"
+                            value={codigoInput}
+                            onChange={(e) => setCodigoInput(e.target.value.toUpperCase().replace(/\s/g, ""))}
+                            className="IDbuscarPDF" />
                         <span></span>
                         <button className="button_PDF" onClick={handleGenerarPDFPersonal}>
                             Generar PDF

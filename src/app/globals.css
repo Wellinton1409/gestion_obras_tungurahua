@@ -23,6 +23,11 @@ main {
 }
 
 
+.deshabilitado {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 .boxPrincipal {
   display: flex;
   flex-direction: column;
@@ -82,7 +87,7 @@ main {
   padding: 6px 6px;
   width: 85%;
   height: 35px;
-  border-radius: 5px;
+  border-radius: 10px;
   border: none;
 }
 
@@ -91,7 +96,7 @@ main {
   padding: 0px 10px;
   width: 50%;
   height: 30px;
-  border-radius: 5px;
+  border-radius: 10px;
   text-align: center;
   border: none;
 }
@@ -104,7 +109,7 @@ main {
   color: white;
   text-align: center;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin: 0 6% 0 0;
@@ -123,28 +128,33 @@ main {
   height: 40px;
   display: flex;
   flex-direction: row;
-  margin: 15px 200px;
+  margin: 15px 15%;
   padding: 6px 50px;
   background-color: #a6b2ac7b;
-  border-radius: 8px;
+  border-radius: 12px;
   align-items: center;
 }
 
 .botones {
   display: flex;
   flex-direction: row;
-  padding: 0 30px;
-  gap: 50px;
+  padding: 0 5%;
+  gap: 30%;
 }
 
 .btn_user_edit {
-  border-radius: 5px;
+  border-radius: 8px;
   font-size: 14px;
   border: none;
   height: 25px;
-  width: 80px;
-  padding: 3px;
+  width: 110px;
+  padding: 3px 6px;
   cursor: pointer;
+}
+
+.btn_user_edit:hover {
+  background-color: #850000;
+  color: white;
 }
 
 .textoNameUser {
@@ -359,7 +369,7 @@ main {
   padding: 4px 6px;
   box-sizing: border-box;
   background-color: #fffcfcdd;
-  margin: 0 2px 0 10px;
+  margin: 0 2px 0 0;
   text-align: end;
 }
 
@@ -380,14 +390,14 @@ main {
 .div_row {
   padding: 10px 5px 10px 10px;
   background-color: #a6b2ac7b;
-  border-radius: 5px;
+  border-radius: 12px;
   margin: 13px 0;
 }
 
 .div_row2 {
   padding: 10px 5px 10px 10px;
   background-color: #78857ee6;
-  border-radius: 5px;
+  border-radius: 12px;
   margin: 13px 0;
 }
 
@@ -410,7 +420,7 @@ main {
   text-align: center;
   text-decoration: none;
   border: none;
-  border-radius: 10px;
+  border-radius: 15px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -446,12 +456,12 @@ main {
   font-size: 12px;
   margin: 6px 0.2% 6px 1px;
   flex: 1;
-  border-radius: 5px;
+  border-radius: 3px;
   border: none;
   padding: 5px 2px;
   box-sizing: border-box;
   background-color: #fffcfcdd;
-  width: 6%;
+  width: 7%;
 }
 
 .input_planillas::placeholder {
@@ -495,18 +505,20 @@ main {
   display: grid;
   align-items: center;
   grid-template-columns: 5fr 3fr 1fr 2fr;
-  margin: 10px 200px;
+  margin: 10px 15%;
   padding: 8px 50px;
-  background-color: #273f3547;
-  border-radius: 5PX;
+  background-color: #a6b2ac7b;
+  border-radius: 15px;
 }
 
 .label_texto_informes {
-  margin: 0 200px;
+  font-size: 14px;
+  margin: 0 16%;
+  font-weight: bold;
 }
 
 .button_PDF {
-  border-radius: 5px;
+  border-radius: 12px;
   border: none;
   width: 100%;
   padding: 8px;
@@ -520,11 +532,12 @@ main {
 
 .IDbuscarPDF {
   font-size: 14px;
-  border-radius: 3px;
+  border-radius: 8px;
   border: none;
   padding: 5px 10PX;
   box-sizing: border-box;
   background-color: #fffcfcdd;
+  text-align: center;
 }
 
 /* IMPRIMIR*/
@@ -558,7 +571,7 @@ main {
   .div_row {
     padding: 8px 8px;
     background-color: #a6b2ac7b;
-    border-radius: 5px;
+    border-radius: 10px;
     margin: 10px 0;
     width: 100%;
     -webkit-print-color-adjust: exact;
@@ -568,7 +581,7 @@ main {
   .div_row2 {
     padding: 8px 8px;
     background-color: #78857ee6;
-    border-radius: 5px;
+    border-radius: 10px;
     margin: 10px 0;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -618,14 +631,14 @@ main {
   }
 
   .input_planillas {
-    font-size: 9px;
+    font-size: 8px;
     margin: 6px 0.2% 6px 1px;
     background-color: white;
   }
 
   .input_planillas::placeholder {
     font-size: 8px;
-    color: rgba(128, 128, 128, 0.712);
+    color: rgba(128, 128, 128, 0.482);
     opacity: 1;
   }
 

@@ -50,6 +50,8 @@ const Proyectos: React.FC = () => {
     };
     const [nuevoProyecto, setNuevoProyecto] = useState<any>(initialProyecto);
     const [mensajeError, setMensajeError] = useState("");
+    const [existeProyectos, setExisteProyectos] = useState(false);
+    const [habilitado, setHabilitado] = useState(false);
 
     useEffect(() => {
         if (nuevoProyecto.fchInicio) {
@@ -84,6 +86,8 @@ const Proyectos: React.FC = () => {
             const usuarioSnapshot = await getDocs(usuarioQuery);
 
             if (usuarioSnapshot.empty) {
+                setExisteProyectos(false);
+                setHabilitado(false);
                 setMensajeError("Código incorrecto");
                 setProyectos([]);
                 return;
@@ -97,6 +101,8 @@ const Proyectos: React.FC = () => {
             const proyectosSnapshot = await getDocs(proyectosQuery);
 
             if (proyectosSnapshot.empty) {
+                setExisteProyectos(true);
+                setHabilitado(false);
                 setMensajeError("Fiscalizador sin proyectos");
                 setProyectos([]);
                 return;
@@ -109,6 +115,7 @@ const Proyectos: React.FC = () => {
 
             setProyectos(proyectosData);
             setSelectedProyecto(null);
+            setExisteProyectos(true);
         } catch (error) {
             console.error("Error al buscar proyectos:", error);
             setMensajeError("Ocurrió un error al buscar los proyectos.");
@@ -117,18 +124,26 @@ const Proyectos: React.FC = () => {
 
     // Manejar selección de un proyecto
     const seleccionarProyecto = (proyecto: any) => {
+        setHabilitado(true);
         setSelectedProyecto(proyecto);
         setNuevoProyecto(proyecto); // Autocompletar el formulario con datos existentes
     };
 
     // Crear un nuevo proyecto
     const crearProyecto = () => {
+        if (existeProyectos) {
+            setHabilitado(true);
+        } else {
+            setHabilitado(false);
+        }
+
         setNuevoProyecto({
             ...initialProyecto,
             codFiscalizador: codigo,
             fiscalizador: nombreFiscalizador,
         });
         setSelectedProyecto(null);
+
     };
 
     // Guardar o actualizar proyecto
@@ -193,8 +208,9 @@ const Proyectos: React.FC = () => {
         return integerPart + decimalPart;
     };
 
-    const calcularTotal = (valores: string[]) => {
+    const calcularTotal = (valores: (string | undefined)[]) => {
         const total = valores
+            .map((v) => v ?? "0")
             .map((v) => v.replace(/\./g, "").replace(",", ".")) // Convierte a formato numérico correcto
             .map((v) => parseFloat(v) || 0) // Convierte a número
             .reduce((acc, num) => acc + num, 0); // Suma total
@@ -260,7 +276,7 @@ const Proyectos: React.FC = () => {
                 <div>
                     <form>
                         {/* Botón Guardar */}
-                        <div className="encabezado_formulario">
+                        <div className={`encabezado_formulario ${habilitado ? "" : "deshabilitado"}`}>
                             <h3 className="subtituloProyectos no-print">Formulario del Proyecto</h3>
 
                             <div className="boxGuardar">
@@ -274,7 +290,7 @@ const Proyectos: React.FC = () => {
                             </div>
                         </div>
                         {/* input_campos del formulario */}
-                        <div className="formularioProyecto">
+                        <div className={`formularioProyecto ${habilitado ? "" : "deshabilitado"}`}>
                             <div className="div_row campo_container">
                                 <label className="label_campo">
                                     <strong>Proyecto:</strong>
@@ -1342,7 +1358,7 @@ const Proyectos: React.FC = () => {
                                 />
                             </div>
                         </div>
-                        <div className="box_button_delete_guardar">
+                        <div className={`box_button_delete_guardar ${habilitado ? "" : "deshabilitado"}`}>
                             <button
                                 type="button"
                                 onClick={eliminarProyecto}

@@ -22,6 +22,7 @@ const Header = () => {
     return (
         <header className="header">
             <div className="headerImg">
+
                 <img src='/logoGADcirculo.png' />
             </div>
             <div className='titulo_oculto'>
