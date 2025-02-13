@@ -15,6 +15,7 @@ import {
 
 const Proyectos: React.FC = () => {
     const [codigo, setCodigo] = useState("");
+    const [nombreUsusario, setNombreUsuario] = useState("");
     const [nombreFiscalizador, setnombreFiscalizador] = useState("");
     const [proyectos, setProyectos] = useState<any[]>([]);
     const [selectedProyecto, setSelectedProyecto] = useState<any | null>(null); // Proyecto seleccionado
@@ -52,6 +53,7 @@ const Proyectos: React.FC = () => {
     const [mensajeError, setMensajeError] = useState("");
     const [existeProyectos, setExisteProyectos] = useState(false);
     const [habilitado, setHabilitado] = useState(false);
+    const [proyectoSeleccionado, setProyectoSeleccionado] = useState<string | null>(null);
 
     useEffect(() => {
         if (nuevoProyecto.fchInicio) {
@@ -90,11 +92,12 @@ const Proyectos: React.FC = () => {
                 setHabilitado(false);
                 setMensajeError("Código incorrecto");
                 setProyectos([]);
+                setnombreFiscalizador("");
                 return;
             }
 
             const usuarioData = usuarioSnapshot.docs[0].data();
-            setnombreFiscalizador(usuarioData.nombre || "");
+            setNombreUsuario(usuarioData.nombre || "");
 
             const proyectosRef = collection(db, "proyectos");
             const proyectosQuery = query(proyectosRef, where("codFiscalizador", "==", codigo));
@@ -116,6 +119,9 @@ const Proyectos: React.FC = () => {
             setProyectos(proyectosData);
             setSelectedProyecto(null);
             setExisteProyectos(true);
+            setProyectoSeleccionado(null);
+            setNuevoProyecto(initialProyecto);
+            setnombreFiscalizador("");
         } catch (error) {
             console.error("Error al buscar proyectos:", error);
             setMensajeError("Ocurrió un error al buscar los proyectos.");
@@ -127,6 +133,7 @@ const Proyectos: React.FC = () => {
         setHabilitado(true);
         setSelectedProyecto(proyecto);
         setNuevoProyecto(proyecto); // Autocompletar el formulario con datos existentes
+        setProyectoSeleccionado(proyecto.id);
     };
 
     // Crear un nuevo proyecto
@@ -142,6 +149,7 @@ const Proyectos: React.FC = () => {
             codFiscalizador: codigo,
             fiscalizador: nombreFiscalizador,
         });
+        setnombreFiscalizador(nombreUsusario);
         setSelectedProyecto(null);
 
     };
@@ -236,6 +244,7 @@ const Proyectos: React.FC = () => {
                         placeholder="Código Fiscalizador"
                         value={codigo}
                         onChange={(e) => setCodigo(e.target.value.toUpperCase())}
+                        onKeyDown={(e) => e.key === "Enter" && buscarProyectos()}
                         className="campoTxtBuscar"
                     />
                     <button
@@ -257,7 +266,7 @@ const Proyectos: React.FC = () => {
                         <button
                             key={proyecto.id}
                             onClick={() => seleccionarProyecto(proyecto)}
-                            className="buttonObra"
+                            className={`buttonObra ${proyectoSeleccionado === proyecto.id ? "seleccionado" : ""}`}
                         >
                             {proyecto.nombreProyecto}
                         </button>

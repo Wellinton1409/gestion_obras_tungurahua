@@ -176,14 +176,30 @@ main {
 /*Proyectos*/
 
 .buttonObra {
-  width: 100%;
+  width: 97%;
   height: auto;
   padding: 8px;
-  margin: 1px 0;
+  margin: 2px 4px;
   cursor: pointer;
-
+  transition: all 0.3s ease-in-out;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  text-align: left;
+  font-size: 14px;
 }
 
+.buttonObra:hover {
+  background-color: #e0e0e0;
+}
+
+.buttonObra.seleccionado {
+  background-color: #004D25;
+  color: white;
+  width: 99%;
+  margin-left: 1.2%;
+  border-left: 5px solid #002d16;
+  padding: 8px;
+}
 
 .buttonCrear {
   padding: 10px 20px;

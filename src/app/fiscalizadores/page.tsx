@@ -74,9 +74,17 @@ const Usuarios = () => {
     };
 
     // Eliminar usuario
-    const eliminarUsuario = async (id: string) => {
-        const confirmar = confirm("¿Estás seguro que quieres borrar este usuario?");
-        if (!confirmar) return;
+    const eliminarUsuario = async (id: string, codigo: String) => {
+        const codigoIngresado = prompt("Ingrese el código del usuario que desea eliminar para confirmar:");
+
+        if (!codigoIngresado) {
+            alert("Operación cancelada.");
+            return;
+        }
+        if (codigoIngresado !== codigo) {
+            alert("Código incorrecto. No se eliminó el usuario.");
+            return;
+        }
 
         await deleteDoc(doc(db, "usuarios", id));
         setUsuarios(usuarios.filter((usuario) => usuario.id !== id));
@@ -160,7 +168,7 @@ const Usuarios = () => {
                                         Editar
                                     </button>
                                     <button
-                                        onClick={() => eliminarUsuario(usuario.id)}
+                                        onClick={() => eliminarUsuario(usuario.id, usuario.codigo)}
                                         className="btn_user_edit"
                                     >
                                         Eliminar
