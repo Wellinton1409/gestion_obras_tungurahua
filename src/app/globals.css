@@ -556,6 +556,59 @@ main {
   text-align: center;
 }
 
+/*PRESUPUESTOS*/
+
+.parr-nombre {
+  width: 100%;
+}
+
+.input-parr-nombre {
+  width: 88%;
+}
+
+.pr-box-parroquias {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.box-parr-container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 2%;
+}
+
+.parr-planillas {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 4%;
+}
+
+.vias {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  gap: 5px;
+}
+
+.input-parr-via {
+  width: 100%;
+  margin: 8px 0;
+}
+
+.input_pnll {
+  width: 100%;
+}
+
+.parr-presupuesto {
+  display: flex;
+  margin: 10px 0;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
 /* IMPRIMIR*/
 
 @media print {

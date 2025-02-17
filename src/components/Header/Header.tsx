@@ -15,6 +15,7 @@ const Header = () => {
             <li><Link href='/' className="enlace">INICIO</Link></li>
             <li><Link href='/fiscalizadores' className="enlace">FISCALIZADORES</Link></li>
             <li><Link href='/proyectos' className="enlace">PROYECTOS</Link></li>
+            <li><Link href='/presupuestos' className="enlace">PRESUPUESTOS POR VIAS</Link></li>
             <li><Link href='/informes' className="enlace">INFORMES</Link></li>
         </>
     );

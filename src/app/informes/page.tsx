@@ -5,7 +5,7 @@ import { db } from "../../lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { generarPDFPersonal, generarPDFGeneral } from "../../utils/generarPDF";
 
-const Usuarios = () => {
+const Informes = () => {
     const [usuarios, setUsuarios] = useState<any[]>([]);
     const [proyectos, setproyectos] = useState<any[]>([]);
     const [codigoInput, setCodigoInput] = useState("");
@@ -73,4 +73,4 @@ const Usuarios = () => {
     );
 };
 
-export default Usuarios;
+export default Informes;
