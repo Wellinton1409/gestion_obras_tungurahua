@@ -2,7 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import { db } from "../../lib/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import {
+    collection,
+    doc,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+    getDocs,
+    query,
+    where,
+} from "firebase/firestore";
 
 interface Presupuesto {
     codProy: string;
@@ -85,8 +94,14 @@ const Presupuestos = () => {
         pln43: [],
         pln44: [],
     };
+    const [codigo, setCodigo] = useState("");
+    const [proyecto, setProyecto] = useState<any | null>(null);
+    const [proyectos, setProyectos] = useState<any[]>([]);
     const [nuevoPresupuesto, setNuevoPresupuesto] = useState<Presupuesto>(tipoPresupuesto);
-
+    const [idProyectoSeleccionado, setIDProyectoSeleccionado] = useState<string | null>(null);
+    const [mensajeError, setMensajeError] = useState("");
+    const [existeProyectos, setExisteProyectos] = useState(false);
+    const [habilitado, setHabilitado] = useState(false);
 
     const formatearNumerosDollar = (inputValue: string): string => {
         let numericValue = inputValue.replace(/[^0-9,]/g, "");
@@ -98,19 +113,143 @@ const Presupuestos = () => {
         return integerPart + decimalPart;
     };
 
+    // Manejar selección de un proyecto
+    const seleccionarProyecto = (proyecto: any) => {
+        setHabilitado(true);
+        setProyecto(proyecto); // Autocompletar el formulario con datos existentes
+        setIDProyectoSeleccionado(proyecto.id);
+    };
+
+    const buscarProyectos = async () => {
+        try {
+            setMensajeError("");
+            const usuariosRef = collection(db, "usuarios");
+            const usuarioQuery = query(usuariosRef, where("codigo", "==", codigo));
+            const usuarioSnapshot = await getDocs(usuarioQuery);
+
+            if (usuarioSnapshot.empty) {
+                setExisteProyectos(false);
+                setHabilitado(false);
+                setMensajeError("Código incorrecto");
+                setProyectos([]);
+                return;
+            }
+
+            const proyectosRef = collection(db, "proyectos");
+            const proyectosQuery = query(proyectosRef, where("codFiscalizador", "==", codigo));
+            const proyectosSnapshot = await getDocs(proyectosQuery);
+
+            if (proyectosSnapshot.empty) {
+                setExisteProyectos(true);
+                setHabilitado(false);
+                setMensajeError("Fiscalizador sin proyectos");
+                setProyectos([]);
+                return;
+            }
+
+            const proyectosData = proyectosSnapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+            }));
+
+            setProyectos(proyectosData);
+            setExisteProyectos(true);
+            setIDProyectoSeleccionado(null);
+            setProyecto(null);
+        } catch (error) {
+            console.error("Error al buscar proyectos:", error);
+            setMensajeError("Ocurrió un error al buscar los proyectos.");
+        }
+    };
 
     return (
         <div className="box_principal">
-            <div className="barra_lateral"></div>
+            <div className="barra_lateral">
+                <div className="flex space-x-4 mb-4 no-print">
+                    <br />
+                    <br />
+                    <div className="formTitulo">
+                        Listado de proyectos
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <input
+                        type="text"
+                        placeholder="Código Fiscalizador"
+                        value={codigo}
+                        onChange={(e) => setCodigo(e.target.value.toUpperCase())}
+                        onKeyDown={(e) => e.key === "Enter" && buscarProyectos()}
+                        className="campoTxtBuscar"
+                    />
+                    <button
+                        onClick={buscarProyectos}
+                        className="btnBuscar"
+                    >
+                        Buscar
+                    </button>
+                </div>
+                {mensajeError && <p className="mensajeError">{mensajeError}</p>}
+                {/* Lista de proyectos */}
+                <br />
+                <div style={{ padding: "0 6%" }} className="no-print">
+                    <strong>Proyectos:</strong>
+                </div>
+                <br />
+                <div className="listadoProyectos no-print">
+                    {proyectos.map((proyecto) => (
+                        <button
+                            key={proyecto.id}
+                            onClick={() => seleccionarProyecto(proyecto)}
+                            className={`buttonObra ${idProyectoSeleccionado === proyecto.id ? "seleccionado" : ""}`}
+                        >
+                            {proyecto.nombreProyecto}
+                        </button>
+                    ))}
+                </div>
+                <br />
+                <br />
+            </div>
             <div className="container_principal">
                 <br />
                 <h1 className="box_title">PRESUPUESTOS POR VIAS</h1>
                 <div className="pr-box-informacion">
                     <div className="box-info-container">
-                        INFORMACION 1 DE PROYECTO
+                        <div className="info-izquierdo">
+                            <div>Proyecto: </div>
+                            <div>Fiscalizador: </div>
+                        </div>
+                        <div className="info-derecho">
+                            <div className="info-proyecto">{proyecto?.nombreProyecto || ""}</div>
+                            <div className="info-proyecto">{proyecto?.fiscalizador || ""}</div>
+                        </div>
                     </div>
-                    <div className="box-info-container">
-                        INFORMACION 2 DE PROYECTO
+                    <div className="box-info-division">
+                        <div className="box-info-container">
+                            <div className="info-izquierdo">
+                                <div>Proceso de contratación: </div>
+                                <div>Presupuesto inicial: </div>
+                                <div>Administrador de contrato: </div>
+                            </div>
+                            <div className="info-derecho">
+                                <div className="info-proyecto">{proyecto?.procContratacion || ""}</div>
+                                <div className="info-proyecto">{proyecto?.presupuesto || ""}</div>
+                                <div className="info-proyecto">{proyecto?.admiContrato || ""}</div>
+                            </div>
+                        </div>
+                        <div className="box-info-container">
+                            <div className="info-izquierdo">
+                                <div>Estado del Proceso: </div>
+                                <div>Código de contratación: </div>
+                                <div>Avance: </div>
+                            </div>
+                            <div className="info-derecho">
+                                <div className="info-proyecto">{proyecto?.estadoProceso || ""}</div>
+                                <div className="info-proyecto">{proyecto?.codContratacion || ""}</div>
+                                <div className="info-proyecto">{proyecto?.avance || ""}</div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <div className="pr-box-parroquias">
@@ -153,7 +292,7 @@ const Presupuestos = () => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
-                                                pnl11: [
+                                                pln11: [
                                                     ...prevPresupuesto.pln11.slice(0, index),
                                                     formattedValue,
                                                     ...prevPresupuesto.pln11.slice(index + 1),
@@ -187,7 +326,7 @@ const Presupuestos = () => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
-                                                pnl12: [
+                                                pln12: [
                                                     ...prevPresupuesto.pln12.slice(0, index),
                                                     formattedValue,
                                                     ...prevPresupuesto.pln12.slice(index + 1),
@@ -221,7 +360,7 @@ const Presupuestos = () => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
-                                                pnl13: [
+                                                pln13: [
                                                     ...prevPresupuesto.pln13.slice(0, index),
                                                     formattedValue,
                                                     ...prevPresupuesto.pln13.slice(index + 1),
@@ -255,7 +394,7 @@ const Presupuestos = () => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
-                                                pnl14: [
+                                                pln14: [
                                                     ...prevPresupuesto.pln14.slice(0, index),
                                                     formattedValue,
                                                     ...prevPresupuesto.pln14.slice(index + 1),
@@ -755,6 +894,25 @@ const Presupuestos = () => {
                         </div>
 
                     </div>
+                </div>
+                <div className="total-general">
+                    <div>TOTAL PROYECTO EJECUTADO $</div>
+                </div>
+                <div className={`box_button_delete_guardar ${habilitado ? "" : "deshabilitado"}`}>
+                    <button
+                        type="button"
+                        // onClick={}
+                        className="buttonActualizar no-print"
+                    >
+                        Guardar Cambios
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => window.print()}
+                        className="buttonActualizar no-print">
+                        Imprimir
+                    </button>
                 </div>
             </div>
         </div>

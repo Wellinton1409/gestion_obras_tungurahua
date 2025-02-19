@@ -563,7 +563,16 @@ main {
 }
 
 .input-parr-nombre {
-  width: 88%;
+  margin: 0 0 0 5px;
+  min-width: 82%;
+  width: auto;
+  max-width: 88%;
+  font-size: 12px;
+  border-radius: 5px;
+  border: none;
+  padding: 5px 2px;
+  box-sizing: border-box;
+  background-color: #fffcfcdd;
 }
 
 .pr-box-parroquias {
@@ -572,17 +581,32 @@ main {
   width: 100%;
 }
 
+.pr-box-informacion {
+  width: 100%;
+  padding: 20px 4%;
+}
+
+.box-info-division {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+
+}
+
 .box-parr-container {
   display: flex;
   flex-direction: column;
-  padding: 10px 2%;
+  padding: 20px 30px;
+  margin: 10px 2%;
+  background-color: #a6b2ac7b;
+  border-radius: 15px;
 }
 
 .parr-planillas {
   display: flex;
   flex-direction: row;
   width: 100%;
-  gap: 4%;
+  gap: 5%;
 }
 
 .vias {
@@ -595,10 +619,48 @@ main {
 .input-parr-via {
   width: 100%;
   margin: 8px 0;
+  font-size: 12px;
+  border-radius: 5px;
+  border: none;
+  padding: 5px 2px;
+  box-sizing: border-box;
+  background-color: #fffcfca1;
+}
+
+.info-proyecto {
+  min-width: 98%;
+  height: 22px;
+  margin: 10px 5px;
+  font-size: 12px;
+  border-radius: 5px;
+  border: none;
+  padding: 4px 4px;
+  box-sizing: border-box;
+  background-color: #a6b2ac7b;
+}
+
+.box-info-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.info-izquierdo {
+  text-align: end;
+}
+
+.info-izquierdo div {
+  margin: 14px 0;
 }
 
 .input_pnll {
   width: 100%;
+  font-size: 12px;
+  border-radius: 5px;
+  border: none;
+  padding: 5px 2px;
+  box-sizing: border-box;
+  background-color: #fffcfcdd;
 }
 
 .parr-presupuesto {
@@ -607,6 +669,18 @@ main {
   align-items: center;
   justify-content: center;
   gap: 5px;
+}
+
+.total-general {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 20px auto;
+  width: 40%;
+  height: 40px;
+  background-color: #a6b2ac7b;
+  border-radius: 15px;
 }
 
 /* IMPRIMIR*/
