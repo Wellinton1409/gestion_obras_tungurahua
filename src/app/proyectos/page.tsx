@@ -6,6 +6,7 @@ import {
     collection,
     doc,
     addDoc,
+    setDoc,
     updateDoc,
     deleteDoc,
     getDocs,
@@ -172,7 +173,10 @@ const Proyectos: React.FC = () => {
                     codFiscalizador: codigo,
                     ...nuevoProyecto,
                 });
+                await setDoc(doc(db, "presupuestos", docRef.id), {
+                });
                 alert("Proyecto creado");
+
             }
             await buscarProyectos();
         } catch (error) {
@@ -193,6 +197,8 @@ const Proyectos: React.FC = () => {
 
             const proyectoRef = doc(db, "proyectos", selectedProyecto.id);
             await deleteDoc(proyectoRef);
+            const presupuestoRef = doc(db, "presupuestos", selectedProyecto.id);
+            await deleteDoc(presupuestoRef);
             alert("Proyecto eliminado");
 
             setProyectos((prev) => prev.filter(proyecto => proyecto.id !== selectedProyecto.id));
@@ -200,6 +206,7 @@ const Proyectos: React.FC = () => {
             setNuevoProyecto({ ...initialProyecto, codFiscalizador: codigo, fiscalizador: nombreFiscalizador });
 
             await buscarProyectos();
+            setHabilitado(false);
         } catch (error) {
             console.error("Error al eliminar el proyecto:", error);
             alert("Hubo un error al eliminar el proyecto.");

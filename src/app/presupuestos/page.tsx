@@ -5,16 +5,14 @@ import { db } from "../../lib/firebase";
 import {
     collection,
     doc,
-    addDoc,
     updateDoc,
-    deleteDoc,
     getDocs,
+    getDoc,
     query,
     where,
 } from "firebase/firestore";
 
 interface Presupuesto {
-    codProy: string;
     parr1: string;
     via11: string;
     via12: string;
@@ -56,7 +54,6 @@ interface Presupuesto {
 
 const Presupuestos = () => {
     const tipoPresupuesto: Presupuesto = {
-        codProy: "",
         parr1: "",
         via11: "",
         via12: "",
@@ -97,6 +94,7 @@ const Presupuestos = () => {
     const [codigo, setCodigo] = useState("");
     const [proyecto, setProyecto] = useState<any | null>(null);
     const [proyectos, setProyectos] = useState<any[]>([]);
+    const [presupuesto, setPresupuesto] = useState<any | null>(null);
     const [nuevoPresupuesto, setNuevoPresupuesto] = useState<Presupuesto>(tipoPresupuesto);
     const [idProyectoSeleccionado, setIDProyectoSeleccionado] = useState<string | null>(null);
     const [mensajeError, setMensajeError] = useState("");
@@ -115,9 +113,10 @@ const Presupuestos = () => {
 
     // Manejar selección de un proyecto
     const seleccionarProyecto = (proyecto: any) => {
+        setIDProyectoSeleccionado(proyecto.id);
         setHabilitado(true);
         setProyecto(proyecto); // Autocompletar el formulario con datos existentes
-        setIDProyectoSeleccionado(proyecto.id);
+        buscarPlanilla(proyecto.id);
     };
 
     const buscarProyectos = async () => {
@@ -155,12 +154,101 @@ const Presupuestos = () => {
             setProyectos(proyectosData);
             setExisteProyectos(true);
             setIDProyectoSeleccionado(null);
+            setNuevoPresupuesto(tipoPresupuesto);
             setProyecto(null);
         } catch (error) {
             console.error("Error al buscar proyectos:", error);
             setMensajeError("Ocurrió un error al buscar los proyectos.");
         }
     };
+
+    const buscarPlanilla = async (idProySeleccionado: string) => {
+        try {
+            setMensajeError("");
+
+            if (!idProySeleccionado) {
+                setMensajeError("No se ha seleccionado un proyecto.");
+                return;
+            }
+            const presupuestoRef = doc(db, "presupuestos", idProySeleccionado);
+            const presupuestoSnap = await getDoc(presupuestoRef);
+
+            if (!presupuestoSnap.exists()) {
+                setMensajeError("Presupuesto vacío. \n Ingrese Datos.");
+                setNuevoPresupuesto(tipoPresupuesto);
+                return;
+            }
+            const presupuestoData = presupuestoSnap.data() as Presupuesto;
+            setNuevoPresupuesto(presupuestoData);
+            console.log(presupuestoData);
+        } catch (error) {
+            console.error("Error al buscar el presupuesto:", error);
+            setMensajeError("Ocurrió un error al buscar los presupuestos.");
+        }
+    };
+
+    // Guardar o actualizar proyecto
+    const guardarPlanillas = async () => {
+        try {
+
+            if (idProyectoSeleccionado) {
+                const presupuestoRef = doc(db, "presupuestos", idProyectoSeleccionado);
+                await updateDoc(presupuestoRef, { ...nuevoPresupuesto });
+                alert("Presupuesto actualizado");
+            } else {
+
+            }
+        } catch (error) {
+            console.error("Error al guardar el presupuesto:", error);
+        }
+    };
+
+    const calcularTotalPlanillas = (valores: (string | undefined)[]) => {
+        const total = valores
+            .map((v) => v ?? "0")
+            .map((v) => v.replace(/\./g, "").replace(",", ".")) // Convierte a formato numérico correcto
+            .map((v) => parseFloat(v) || 0) // Convierte a número
+            .reduce((acc, num) => acc + num, 0); // Suma total
+
+        return new Intl.NumberFormat("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(total);
+    };
+
+    const calcularTotalParroquia = (nuevoPresupuesto: Record<string, any>, prefijos: string[]) => {
+        const total = prefijos.reduce((acc, prefijo) => {
+            const valores: (string | undefined)[] = nuevoPresupuesto[prefijo] || []; // Obtiene la lista de planillas
+            const suma = valores
+                .map((v: string | undefined) => v ?? "0")
+                .map((v: string) => v.replace(/\./g, "").replace(",", ".")) // Convierte a formato numérico correcto
+                .map((v: string) => parseFloat(v) || 0) // Convierte a número
+                .reduce((acc, num) => acc + num, 0); // Suma total
+
+            return acc + suma;
+        }, 0);
+
+        return new Intl.NumberFormat("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(total);
+    };
+
+    const calcularTotalProyecto = () => {
+        const limpiarNumero = (valor: string | undefined) =>
+            parseFloat((valor ?? "0").replace(/\./g, "").replace(",", ".")) || 0;
+
+        const total =
+            limpiarNumero(totalParroquia1) +
+            limpiarNumero(totalParroquia2) +
+            limpiarNumero(totalParroquia3) +
+            limpiarNumero(totalParroquia4);
+
+        return new Intl.NumberFormat("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(total);
+    };
+
+
+
+    const totalParroquia1 = calcularTotalParroquia(nuevoPresupuesto, ["pln11", "pln12", "pln13", "pln14"]);
+    const totalParroquia2 = calcularTotalParroquia(nuevoPresupuesto, ["pln21", "pln22", "pln23", "pln24"]);
+    const totalParroquia3 = calcularTotalParroquia(nuevoPresupuesto, ["pln31", "pln32", "pln33", "pln34"]);
+    const totalParroquia4 = calcularTotalParroquia(nuevoPresupuesto, ["pln41", "pln42", "pln43", "pln44"]);
+
+
 
     return (
         <div className="box_principal">
@@ -303,6 +391,9 @@ const Presupuestos = () => {
                                         placeholder={`Planilla ${index + 1}`}
                                     />
                                 ))}
+                                <div className="totalPlanillas">
+                                    <span>$ {calcularTotalPlanillas(nuevoPresupuesto.pln11)}</span>
+                                </div>
                             </div>
                             <div className="vias">
                                 <input
@@ -337,6 +428,9 @@ const Presupuestos = () => {
                                         placeholder={`Planilla ${index + 1}`}
                                     />
                                 ))}
+                                <div className="totalPlanillas">
+                                    <span>$ {calcularTotalPlanillas(nuevoPresupuesto.pln12)}</span>
+                                </div>
                             </div>
                             <div className="vias">
                                 <input
@@ -371,6 +465,9 @@ const Presupuestos = () => {
                                         placeholder={`Planilla ${index + 1}`}
                                     />
                                 ))}
+                                <div className="totalPlanillas">
+                                    <span>$ {calcularTotalPlanillas(nuevoPresupuesto.pln13)}</span>
+                                </div>
                             </div>
                             <div className="vias">
                                 <input
@@ -405,11 +502,16 @@ const Presupuestos = () => {
                                         placeholder={`Planilla ${index + 1}`}
                                     />
                                 ))}
+                                <div className="totalPlanillas">
+                                    <span>$ {calcularTotalPlanillas(nuevoPresupuesto.pln14)}</span>
+                                </div>
                             </div>
                         </div>
                         <div className="parr-presupuesto">
-                            <span>Presupuesto parroquia 1:</span>
-                            <span>$ total</span>
+                            <span>Presupuesto parroquia {nuevoPresupuesto.parr1}:</span>
+                            <div className="totalParroquia">
+                                <span>$ {totalParroquia1}</span>
+                            </div>
                         </div>
                     </div>
                     <div className="box-parr-container">
@@ -462,6 +564,9 @@ const Presupuestos = () => {
                                         placeholder={`Planilla ${index + 1}`}
                                     />
                                 ))}
+                                <div className="totalPlanillas">
+                                    <span>$ {calcularTotalPlanillas(nuevoPresupuesto.pln21)}</span>
+                                </div>
                             </div>
                             <div className="vias">
                                 <input
@@ -496,6 +601,9 @@ const Presupuestos = () => {
                                         placeholder={`Planilla ${index + 1}`}
                                     />
                                 ))}
+                                <div className="totalPlanillas">
+                                    <span>$ {calcularTotalPlanillas(nuevoPresupuesto.pln22)}</span>
+                                </div>
                             </div>
                             <div className="vias">
                                 <input
@@ -530,6 +638,9 @@ const Presupuestos = () => {
                                         placeholder={`Planilla ${index + 1}`}
                                     />
                                 ))}
+                                <div className="totalPlanillas">
+                                    <span>$ {calcularTotalPlanillas(nuevoPresupuesto.pln23)}</span>
+                                </div>
                             </div>
                             <div className="vias">
                                 <input
@@ -564,13 +675,17 @@ const Presupuestos = () => {
                                         placeholder={`Planilla ${index + 1}`}
                                     />
                                 ))}
+                                <div className="totalPlanillas">
+                                    <span>$ {calcularTotalPlanillas(nuevoPresupuesto.pln24)}</span>
+                                </div>
                             </div>
                         </div>
                         <div className="parr-presupuesto">
-                            <span>Presupuesto parroquia 2:</span>
-                            <span>$ total</span>
+                            <span>Presupuesto parroquia {nuevoPresupuesto.parr2}:</span>
+                            <div className="totalParroquia">
+                                <span>$ {totalParroquia2}</span>
+                            </div>
                         </div>
-
                     </div>
                 </div>
                 <div className="pr-box-parroquias">
@@ -624,6 +739,9 @@ const Presupuestos = () => {
                                         placeholder={`Planilla ${index + 1}`}
                                     />
                                 ))}
+                                <div className="totalPlanillas">
+                                    <span>$ {calcularTotalPlanillas(nuevoPresupuesto.pln31)}</span>
+                                </div>
                             </div>
                             <div className="vias">
                                 <input
@@ -658,6 +776,9 @@ const Presupuestos = () => {
                                         placeholder={`Planilla ${index + 1}`}
                                     />
                                 ))}
+                                <div className="totalPlanillas">
+                                    <span>$ {calcularTotalPlanillas(nuevoPresupuesto.pln32)}</span>
+                                </div>
                             </div>
                             <div className="vias">
                                 <input
@@ -692,6 +813,9 @@ const Presupuestos = () => {
                                         placeholder={`Planilla ${index + 1}`}
                                     />
                                 ))}
+                                <div className="totalPlanillas">
+                                    <span>$ {calcularTotalPlanillas(nuevoPresupuesto.pln33)}</span>
+                                </div>
                             </div>
                             <div className="vias">
                                 <input
@@ -726,13 +850,17 @@ const Presupuestos = () => {
                                         placeholder={`Planilla ${index + 1}`}
                                     />
                                 ))}
+                                <div className="totalPlanillas">
+                                    <span>$ {calcularTotalPlanillas(nuevoPresupuesto.pln34)}</span>
+                                </div>
                             </div>
                         </div>
                         <div className="parr-presupuesto">
-                            <span>Presupuesto parroquia 3:</span>
-                            <span>$ total</span>
+                            <span>Presupuesto parroquia {nuevoPresupuesto.parr3}:</span>
+                            <div className="totalParroquia">
+                                <span>$ {totalParroquia3}</span>
+                            </div>
                         </div>
-
                     </div>
                     <div className="box-parr-container">
                         {/* Parroquia 4 */}
@@ -784,6 +912,9 @@ const Presupuestos = () => {
                                         placeholder={`Planilla ${index + 1}`}
                                     />
                                 ))}
+                                <div className="totalPlanillas">
+                                    <span>$ {calcularTotalPlanillas(nuevoPresupuesto.pln41)}</span>
+                                </div>
                             </div>
                             <div className="vias">
                                 <input
@@ -818,6 +949,9 @@ const Presupuestos = () => {
                                         placeholder={`Planilla ${index + 1}`}
                                     />
                                 ))}
+                                <div className="totalPlanillas">
+                                    <span>$ {calcularTotalPlanillas(nuevoPresupuesto.pln42)}</span>
+                                </div>
                             </div>
                             <div className="vias">
                                 <input
@@ -852,6 +986,9 @@ const Presupuestos = () => {
                                         placeholder={`Planilla ${index + 1}`}
                                     />
                                 ))}
+                                <div className="totalPlanillas">
+                                    <span>$ {calcularTotalPlanillas(nuevoPresupuesto.pln43)}</span>
+                                </div>
                             </div>
                             <div className="vias">
                                 <input
@@ -886,22 +1023,26 @@ const Presupuestos = () => {
                                         placeholder={`Planilla ${index + 1}`}
                                     />
                                 ))}
+                                <div className="totalPlanillas">
+                                    <span>$ {calcularTotalPlanillas(nuevoPresupuesto.pln44)}</span>
+                                </div>
                             </div>
                         </div>
                         <div className="parr-presupuesto">
-                            <span>Presupuesto parroquia 4:</span>
-                            <span>$ total</span>
+                            <span>Presupuesto parroquia {nuevoPresupuesto.parr4}:</span>
+                            <div className="totalParroquia">
+                                <span>$ {totalParroquia4}</span>
+                            </div>
                         </div>
-
                     </div>
                 </div>
                 <div className="total-general">
-                    <div>TOTAL PROYECTO EJECUTADO $</div>
+                    <div>TOTAL PROYECTO EJECUTADO: $ {calcularTotalProyecto()}</div>
                 </div>
                 <div className={`box_button_delete_guardar ${habilitado ? "" : "deshabilitado"}`}>
                     <button
                         type="button"
-                        // onClick={}
+                        onClick={guardarPlanillas}
                         className="buttonActualizar no-print"
                     >
                         Guardar Cambios
