@@ -203,8 +203,8 @@ const Presupuestos = () => {
         }
     };
 
-    const calcularTotalPlanillas = (valores: (string | undefined)[]) => {
-        const total = valores
+    const calcularTotalPlanillas = (valores: (string | undefined)[] = []) => {
+        const total = (valores ?? [])
             .map((v) => v ?? "0")
             .map((v) => v.replace(/\./g, "").replace(",", ".")) // Convierte a formato numérico correcto
             .map((v) => parseFloat(v) || 0) // Convierte a número
@@ -298,16 +298,16 @@ const Presupuestos = () => {
                 <br />
                 <br />
             </div>
-            <div className="container_principal">
+            <div className={`container_principal ${habilitado ? "" : "deshabilitado"}`}>
                 <br />
                 <h1 className="box_title">PRESUPUESTOS POR VIAS</h1>
                 <div className="pr-box-informacion">
-                    <div className="box-info-container">
-                        <div className="info-izquierdo">
+                    <div className="box-info-container-principal">
+                        <div className="info-izquierdo-principal">
                             <div>Proyecto: </div>
                             <div>Fiscalizador: </div>
                         </div>
-                        <div className="info-derecho">
+                        <div className="info-derecho-principal">
                             <div className="info-proyecto">{proyecto?.nombreProyecto || ""}</div>
                             <div className="info-proyecto">{proyecto?.fiscalizador || ""}</div>
                         </div>
@@ -375,15 +375,15 @@ const Presupuestos = () => {
                                     <input
                                         key={index}
                                         type="text"
-                                        value={nuevoPresupuesto.pln11[index] || ""}
+                                        value={nuevoPresupuesto.pln11?.[index] || ""}
                                         onChange={(e) => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
                                                 pln11: [
-                                                    ...prevPresupuesto.pln11.slice(0, index),
+                                                    ...(prevPresupuesto.pln11 ?? []).slice(0, index),
                                                     formattedValue,
-                                                    ...prevPresupuesto.pln11.slice(index + 1),
+                                                    ...(prevPresupuesto.pln11 ?? []).slice(index + 1),
                                                 ],
                                             }));
                                         }}
@@ -412,15 +412,15 @@ const Presupuestos = () => {
                                     <input
                                         key={index}
                                         type="text"
-                                        value={nuevoPresupuesto.pln12[index] || ""}
+                                        value={nuevoPresupuesto.pln12?.[index] || ""}
                                         onChange={(e) => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
                                                 pln12: [
-                                                    ...prevPresupuesto.pln12.slice(0, index),
+                                                    ...(prevPresupuesto.pln12 ?? []).slice(0, index),
                                                     formattedValue,
-                                                    ...prevPresupuesto.pln12.slice(index + 1),
+                                                    ...(prevPresupuesto.pln12 ?? []).slice(index + 1),
                                                 ],
                                             }));
                                         }}
@@ -449,15 +449,15 @@ const Presupuestos = () => {
                                     <input
                                         key={index}
                                         type="text"
-                                        value={nuevoPresupuesto.pln13[index] || ""}
+                                        value={nuevoPresupuesto.pln13?.[index] || ""}
                                         onChange={(e) => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
                                                 pln13: [
-                                                    ...prevPresupuesto.pln13.slice(0, index),
+                                                    ...(prevPresupuesto.pln13 ?? []).slice(0, index),
                                                     formattedValue,
-                                                    ...prevPresupuesto.pln13.slice(index + 1),
+                                                    ...(prevPresupuesto.pln13 ?? []).slice(index + 1),
                                                 ],
                                             }));
                                         }}
@@ -486,15 +486,15 @@ const Presupuestos = () => {
                                     <input
                                         key={index}
                                         type="text"
-                                        value={nuevoPresupuesto.pln14[index] || ""}
+                                        value={nuevoPresupuesto.pln14?.[index] || ""}
                                         onChange={(e) => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
                                                 pln14: [
-                                                    ...prevPresupuesto.pln14.slice(0, index),
+                                                    ...(prevPresupuesto.pln14 ?? []).slice(0, index),
                                                     formattedValue,
-                                                    ...prevPresupuesto.pln14.slice(index + 1),
+                                                    ...(prevPresupuesto.pln14 ?? []).slice(index + 1),
                                                 ],
                                             }));
                                         }}
@@ -548,15 +548,15 @@ const Presupuestos = () => {
                                     <input
                                         key={index}
                                         type="text"
-                                        value={nuevoPresupuesto.pln21[index] || ""}
+                                        value={nuevoPresupuesto.pln21?.[index] || ""}
                                         onChange={(e) => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
                                                 pln21: [
-                                                    ...prevPresupuesto.pln21.slice(0, index),
+                                                    ...(prevPresupuesto.pln21 ?? []).slice(0, index),
                                                     formattedValue,
-                                                    ...prevPresupuesto.pln21.slice(index + 1),
+                                                    ...(prevPresupuesto.pln21 ?? []).slice(index + 1),
                                                 ],
                                             }));
                                         }}
@@ -585,15 +585,15 @@ const Presupuestos = () => {
                                     <input
                                         key={index}
                                         type="text"
-                                        value={nuevoPresupuesto.pln22[index] || ""}
+                                        value={nuevoPresupuesto.pln22?.[index] || ""}
                                         onChange={(e) => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
                                                 pln22: [
-                                                    ...prevPresupuesto.pln22.slice(0, index),
+                                                    ...(prevPresupuesto.pln22 ?? []).slice(0, index),
                                                     formattedValue,
-                                                    ...prevPresupuesto.pln22.slice(index + 1),
+                                                    ...(prevPresupuesto.pln22 ?? []).slice(index + 1),
                                                 ],
                                             }));
                                         }}
@@ -622,15 +622,15 @@ const Presupuestos = () => {
                                     <input
                                         key={index}
                                         type="text"
-                                        value={nuevoPresupuesto.pln23[index] || ""}
+                                        value={nuevoPresupuesto.pln23?.[index] || ""}
                                         onChange={(e) => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
                                                 pln23: [
-                                                    ...prevPresupuesto.pln23.slice(0, index),
+                                                    ...(prevPresupuesto.pln23 ?? []).slice(0, index),
                                                     formattedValue,
-                                                    ...prevPresupuesto.pln23.slice(index + 1),
+                                                    ...(prevPresupuesto.pln23 ?? []).slice(index + 1),
                                                 ],
                                             }));
                                         }}
@@ -659,15 +659,15 @@ const Presupuestos = () => {
                                     <input
                                         key={index}
                                         type="text"
-                                        value={nuevoPresupuesto.pln24[index] || ""}
+                                        value={nuevoPresupuesto.pln24?.[index] || ""}
                                         onChange={(e) => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
                                                 pln24: [
-                                                    ...prevPresupuesto.pln24.slice(0, index),
+                                                    ...(prevPresupuesto.pln24 ?? []).slice(0, index),
                                                     formattedValue,
-                                                    ...prevPresupuesto.pln24.slice(index + 1),
+                                                    ...(prevPresupuesto.pln24 ?? []).slice(index + 1),
                                                 ],
                                             }));
                                         }}
@@ -723,15 +723,15 @@ const Presupuestos = () => {
                                     <input
                                         key={index}
                                         type="text"
-                                        value={nuevoPresupuesto.pln31[index] || ""}
+                                        value={nuevoPresupuesto.pln31?.[index] || ""}
                                         onChange={(e) => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
                                                 pln31: [
-                                                    ...prevPresupuesto.pln31.slice(0, index),
+                                                    ...(prevPresupuesto.pln31 ?? []).slice(0, index),
                                                     formattedValue,
-                                                    ...prevPresupuesto.pln31.slice(index + 1),
+                                                    ...(prevPresupuesto.pln31 ?? []).slice(index + 1),
                                                 ],
                                             }));
                                         }}
@@ -760,15 +760,15 @@ const Presupuestos = () => {
                                     <input
                                         key={index}
                                         type="text"
-                                        value={nuevoPresupuesto.pln32[index] || ""}
+                                        value={nuevoPresupuesto.pln32?.[index] || ""}
                                         onChange={(e) => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
                                                 pln32: [
-                                                    ...prevPresupuesto.pln32.slice(0, index),
+                                                    ...(prevPresupuesto.pln32 ?? []).slice(0, index),
                                                     formattedValue,
-                                                    ...prevPresupuesto.pln32.slice(index + 1),
+                                                    ...(prevPresupuesto.pln32 ?? []).slice(index + 1),
                                                 ],
                                             }));
                                         }}
@@ -797,15 +797,15 @@ const Presupuestos = () => {
                                     <input
                                         key={index}
                                         type="text"
-                                        value={nuevoPresupuesto.pln33[index] || ""}
+                                        value={nuevoPresupuesto.pln33?.[index] || ""}
                                         onChange={(e) => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
                                                 pln33: [
-                                                    ...prevPresupuesto.pln33.slice(0, index),
+                                                    ...(prevPresupuesto.pln33 ?? []).slice(0, index),
                                                     formattedValue,
-                                                    ...prevPresupuesto.pln33.slice(index + 1),
+                                                    ...(prevPresupuesto.pln33 ?? []).slice(index + 1),
                                                 ],
                                             }));
                                         }}
@@ -834,15 +834,15 @@ const Presupuestos = () => {
                                     <input
                                         key={index}
                                         type="text"
-                                        value={nuevoPresupuesto.pln34[index] || ""}
+                                        value={nuevoPresupuesto.pln34?.[index] || ""}
                                         onChange={(e) => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
                                                 pln34: [
-                                                    ...prevPresupuesto.pln34.slice(0, index),
+                                                    ...(prevPresupuesto.pln34 ?? []).slice(0, index),
                                                     formattedValue,
-                                                    ...prevPresupuesto.pln34.slice(index + 1),
+                                                    ...(prevPresupuesto.pln34 ?? []).slice(index + 1),
                                                 ],
                                             }));
                                         }}
@@ -896,15 +896,15 @@ const Presupuestos = () => {
                                     <input
                                         key={index}
                                         type="text"
-                                        value={nuevoPresupuesto.pln41[index] || ""}
+                                        value={nuevoPresupuesto.pln41?.[index] || ""}
                                         onChange={(e) => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
                                                 pln41: [
-                                                    ...prevPresupuesto.pln41.slice(0, index),
+                                                    ...(prevPresupuesto.pln41 ?? []).slice(0, index),
                                                     formattedValue,
-                                                    ...prevPresupuesto.pln41.slice(index + 1),
+                                                    ...(prevPresupuesto.pln41 ?? []).slice(index + 1),
                                                 ],
                                             }));
                                         }}
@@ -933,15 +933,15 @@ const Presupuestos = () => {
                                     <input
                                         key={index}
                                         type="text"
-                                        value={nuevoPresupuesto.pln42[index] || ""}
+                                        value={nuevoPresupuesto.pln42?.[index] || ""}
                                         onChange={(e) => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
                                                 pln42: [
-                                                    ...prevPresupuesto.pln42.slice(0, index),
+                                                    ...(prevPresupuesto.pln42 ?? []).slice(0, index),
                                                     formattedValue,
-                                                    ...prevPresupuesto.pln42.slice(index + 1),
+                                                    ...(prevPresupuesto.pln42 ?? []).slice(index + 1),
                                                 ],
                                             }));
                                         }}
@@ -970,15 +970,15 @@ const Presupuestos = () => {
                                     <input
                                         key={index}
                                         type="text"
-                                        value={nuevoPresupuesto.pln43[index] || ""}
+                                        value={nuevoPresupuesto.pln43?.[index] || ""}
                                         onChange={(e) => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
                                                 pln43: [
-                                                    ...prevPresupuesto.pln43.slice(0, index),
+                                                    ...(prevPresupuesto.pln43 ?? []).slice(0, index),
                                                     formattedValue,
-                                                    ...prevPresupuesto.pln43.slice(index + 1),
+                                                    ...(prevPresupuesto.pln43 ?? []).slice(index + 1),
                                                 ],
                                             }));
                                         }}
@@ -1007,15 +1007,15 @@ const Presupuestos = () => {
                                     <input
                                         key={index}
                                         type="text"
-                                        value={nuevoPresupuesto.pln44[index] || ""}
+                                        value={nuevoPresupuesto.pln44?.[index] || ""}
                                         onChange={(e) => {
                                             const formattedValue = formatearNumerosDollar(e.target.value);
                                             setNuevoPresupuesto((prevPresupuesto) => ({
                                                 ...prevPresupuesto,
                                                 pln44: [
-                                                    ...prevPresupuesto.pln44.slice(0, index),
+                                                    ...(prevPresupuesto.pln44 ?? []).slice(0, index),
                                                     formattedValue,
-                                                    ...prevPresupuesto.pln44.slice(index + 1),
+                                                    ...(prevPresupuesto.pln44 ?? []).slice(index + 1),
                                                 ],
                                             }));
                                         }}
