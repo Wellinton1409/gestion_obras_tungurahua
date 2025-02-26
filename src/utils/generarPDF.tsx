@@ -56,26 +56,26 @@ export const generarPDFPersonal = (fiscalizador: string, proyectos: any[]) => {
             ? `$ ${(
                 proyecto.planillas
                     .map((p: string) => {
-                        const parsedValue = parseFloat(p.replace(',', '.')); // Reemplazar coma por punto para decimales
-                        return isNaN(parsedValue) ? 0 : parsedValue; // Si no es un número válido, usamos 0
-                    }) // Convertir cada valor a número
-                    .reduce((acc: number, val: number) => acc + val, 0) // Sumar
-            ).toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` // Formato con coma decimal y punto para miles
+                        const parsedValue = parseFloat(p.replace(/\./g, "").replace(",", "."));
+                        return isNaN(parsedValue) ? 0 : parsedValue;
+                    })
+                    .reduce((acc: number, val: number) => acc + val, 0)
+            ).toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
             : "$ 0,00",
         reajustes: proyecto.reajustes
             ? `$ ${(
                 proyecto.reajustes
                     .map((p: string) => {
-                        const parsedValue = parseFloat(p.replace(',', '.')); // Reemplazar coma por punto para decimales
-                        return isNaN(parsedValue) ? 0 : parsedValue; // Si no es un número válido, usamos 0
-                    }) // Convertir cada valor a número
-                    .reduce((acc: number, val: number) => acc + val, 0) // Sumar
-            ).toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` // Formato con coma decimal y punto para miles
-            : "0,00",
+                        const parsedValue = parseFloat(p.replace(/\./g, "").replace(",", "."));
+                        return isNaN(parsedValue) ? 0 : parsedValue;
+                    })
+                    .reduce((acc: number, val: number) => acc + val, 0)
+            ).toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+            : "$ 0,00",
         costoPorcentaje: proyecto.costoPorcent
-            ? proyecto.presupuesto.includes(",")
-                ? `$ ${proyecto.presupuesto}`
-                : `$ ${proyecto.presupuesto},00`
+            ? proyecto.costoPorcent.includes(",")
+                ? `$ ${proyecto.costoPorcent}`
+                : `$ ${proyecto.costoPorcent},00`
             : "$ 0,00",
         fchInicio: proyecto.fchInicio || "",
         ampliaciones: proyecto.ampliaciones && proyecto.ampliaciones.length > 0
@@ -194,26 +194,26 @@ export const generarPDFGeneral = (usuarios: any[], proyectos: any[]) => {
                     ? `$ ${(
                         proyecto.planillas
                             .map((p: string) => {
-                                const parsedValue = parseFloat(p.replace(',', '.')); // Reemplazar coma por punto para decimales
-                                return isNaN(parsedValue) ? 0 : parsedValue; // Si no es un número válido, usamos 0
-                            }) // Convertir cada valor a número
-                            .reduce((acc: number, val: number) => acc + val, 0) // Sumar
-                    ).toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` // Formato con coma decimal y punto para miles
+                                const parsedValue = parseFloat(p.replace(/\./g, "").replace(",", "."));
+                                return isNaN(parsedValue) ? 0 : parsedValue;
+                            })
+                            .reduce((acc: number, val: number) => acc + val, 0)
+                    ).toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
                     : "$ 0,00",
                 reajustes: proyecto.reajustes
                     ? `$ ${(
                         proyecto.reajustes
                             .map((p: string) => {
-                                const parsedValue = parseFloat(p.replace(',', '.')); // Reemplazar coma por punto para decimales
-                                return isNaN(parsedValue) ? 0 : parsedValue; // Si no es un número válido, usamos 0
-                            }) // Convertir cada valor a número
-                            .reduce((acc: number, val: number) => acc + val, 0) // Sumar
-                    ).toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` // Formato con coma decimal y punto para miles
-                    : "0,00",
+                                const parsedValue = parseFloat(p.replace(/\./g, "").replace(",", "."));
+                                return isNaN(parsedValue) ? 0 : parsedValue;
+                            })
+                            .reduce((acc: number, val: number) => acc + val, 0)
+                    ).toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                    : "$ 0,00",
                 costoPorcentaje: proyecto.costoPorcent
-                    ? proyecto.presupuesto.includes(",")
-                        ? `$ ${proyecto.presupuesto}`
-                        : `$ ${proyecto.presupuesto},00`
+                    ? proyecto.costoPorcent.includes(",")
+                        ? `$ ${proyecto.costoPorcent}`
+                        : `$ ${proyecto.costoPorcent},00`
                     : "$ 0,00",
                 fchInicio: proyecto.fchInicio || "",
                 ampliaciones: proyecto.ampliaciones && proyecto.ampliaciones.length > 0

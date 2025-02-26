@@ -321,7 +321,7 @@ const Presupuestos = () => {
                             </div>
                             <div className="info-derecho">
                                 <div className="info-proyecto">{proyecto?.procContratacion || ""}</div>
-                                <div className="info-proyecto">{proyecto?.presupuesto || ""}</div>
+                                <div className="info-proyecto">$ {proyecto?.presupuesto || ""}</div>
                                 <div className="info-proyecto">{proyecto?.admiContrato || ""}</div>
                             </div>
                         </div>
@@ -334,7 +334,7 @@ const Presupuestos = () => {
                             <div className="info-derecho">
                                 <div className="info-proyecto">{proyecto?.estadoProceso || ""}</div>
                                 <div className="info-proyecto">{proyecto?.codContratacion || ""}</div>
-                                <div className="info-proyecto">{proyecto?.avance || ""}</div>
+                                <div className="info-proyecto">{proyecto?.avance || ""} %</div>
                             </div>
                         </div>
 
