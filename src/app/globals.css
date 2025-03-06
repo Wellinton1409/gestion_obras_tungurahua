@@ -828,4 +828,114 @@ main {
     font-size: 8px;
   }
 
+  /****IMPRIMIR PRESUPUESTOS****/
+
+  .pr-box-informacion {
+    width: 100%;
+    padding: 0px 0px;
+    font-size: 12px;
+  }
+
+
+  .input-parr-via {
+    width: 100%;
+    margin: 8px 0;
+    font-size: 11px;
+    border-radius: 5px;
+    border: none;
+    padding: 5px 2px;
+    box-sizing: border-box;
+    background-color: #fffcfca1;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .info-derecho-principal {
+    width: 90%;
+  }
+
+  .info-derecho {
+    width: 55%;
+    font-size: 12px;
+  }
+
+  .info-proyecto {
+    min-width: 100%;
+    height: 22px;
+    margin: 7px 5px;
+    font-size: 12px;
+    border-radius: 5px;
+    border: none;
+    padding: 4px 10px;
+    box-sizing: border-box;
+    background-color: #a6b2ac7b;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .box-info-container-principal {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .box-info-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .info-izquierdo-principal {
+    text-align: end;
+    width: 10%;
+  }
+
+  .info-izquierdo-principal div {
+    margin: 14px 0;
+  }
+
+  .info-izquierdo {
+    text-align: end;
+    width: 45%;
+    font-size: 12px;
+  }
+
+  .info-izquierdo div {
+    margin: 14px 0;
+  }
+
+  .box-parr-container {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 8px;
+    margin: 5px 2px;
+    background-color: #a6b2ac7b;
+    border-radius: 15px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .input-parr-nombre {
+    margin: 0 0 0 5px;
+    min-width: 70%;
+    width: auto;
+    max-width: 80%;
+    font-size: 12px;
+    border-radius: 5px;
+    border: none;
+    padding: 4px 2px;
+    box-sizing: border-box;
+    background-color: #fffcfcdd;
+  }
+
+  .input_pnll {
+    width: 100%;
+    font-size: 9px;
+    border-radius: 3px;
+    border: none;
+    padding: 3px 2px;
+    box-sizing: border-box;
+    background-color: #fffcfcdd;
+  }
+
 }
