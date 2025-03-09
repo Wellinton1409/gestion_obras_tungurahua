@@ -300,7 +300,7 @@ const Presupuestos = () => {
             </div>
             <div className={`container_principal ${habilitado ? "" : "deshabilitado"}`}>
                 <br />
-                <h1 className="box_title">PRESUPUESTOS POR VIAS</h1>
+                <h1 className="box_title no-print">PRESUPUESTOS POR VIAS</h1>
                 <div className="pr-box-informacion">
                     <div className="box-info-container-principal">
                         <div className="info-izquierdo-principal">

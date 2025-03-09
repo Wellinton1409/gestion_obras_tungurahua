@@ -832,8 +832,8 @@ main {
 
   .pr-box-informacion {
     width: 100%;
-    padding: 0px 0px;
-    font-size: 12px;
+    padding: 0;
+    font-size: 11px;
   }
 
 
@@ -855,15 +855,15 @@ main {
   }
 
   .info-derecho {
-    width: 55%;
+    width: 60%;
     font-size: 12px;
   }
 
   .info-proyecto {
     min-width: 100%;
     height: 22px;
-    margin: 7px 5px;
-    font-size: 12px;
+    margin: 7px 5px 0 5px;
+    font-size: 11px;
     border-radius: 5px;
     border: none;
     padding: 4px 10px;
@@ -896,8 +896,9 @@ main {
 
   .info-izquierdo {
     text-align: end;
-    width: 45%;
-    font-size: 12px;
+    width: 40%;
+    font-size: 11px;
+    padding: 0;
   }
 
   .info-izquierdo div {
@@ -907,8 +908,8 @@ main {
   .box-parr-container {
     display: flex;
     flex-direction: column;
-    padding: 8px 8px;
-    margin: 5px 2px;
+    padding: 8px 10px 4px 10px;
+    margin: 4px 0 4px 8px;
     background-color: #a6b2ac7b;
     border-radius: 15px;
     -webkit-print-color-adjust: exact;
@@ -938,4 +939,24 @@ main {
     background-color: #fffcfcdd;
   }
 
+  .totalPlanillas {
+    text-align: center;
+    margin: 0 5px 0 0;
+    font-size: 10px;
+  }
+
+  .parr-presupuesto {
+    font-size: 10px;
+  }
+
+  .total-general {
+    font-size: 10px;
+    margin: 5px auto 0 auto;
+    width: 60%;
+    height: 30px;
+    background-color: #a6b2ac7b;
+    border-radius: 15px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 }
