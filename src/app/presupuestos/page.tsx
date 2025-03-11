@@ -94,7 +94,6 @@ const Presupuestos = () => {
     const [codigo, setCodigo] = useState("");
     const [proyecto, setProyecto] = useState<any | null>(null);
     const [proyectos, setProyectos] = useState<any[]>([]);
-    const [presupuesto, setPresupuesto] = useState<any | null>(null);
     const [nuevoPresupuesto, setNuevoPresupuesto] = useState<Presupuesto>(tipoPresupuesto);
     const [idProyectoSeleccionado, setIDProyectoSeleccionado] = useState<string | null>(null);
     const [mensajeError, setMensajeError] = useState("");
@@ -510,7 +509,7 @@ const Presupuestos = () => {
                         <div className="parr-presupuesto">
                             <span>Presupuesto parroquia {nuevoPresupuesto.parr1}:</span>
                             <div className="totalParroquia">
-                                <span>$ {totalParroquia1}</span>
+                                <span><strong>$ {totalParroquia1}</strong></span>
                             </div>
                         </div>
                     </div>
@@ -683,7 +682,7 @@ const Presupuestos = () => {
                         <div className="parr-presupuesto">
                             <span>Presupuesto parroquia {nuevoPresupuesto.parr2}:</span>
                             <div className="totalParroquia">
-                                <span>$ {totalParroquia2}</span>
+                                <span><strong>$ {totalParroquia2}</strong></span>
                             </div>
                         </div>
                     </div>
@@ -858,7 +857,7 @@ const Presupuestos = () => {
                         <div className="parr-presupuesto">
                             <span>Presupuesto parroquia {nuevoPresupuesto.parr3}:</span>
                             <div className="totalParroquia">
-                                <span>$ {totalParroquia3}</span>
+                                <span><strong>$ {totalParroquia3}</strong></span>
                             </div>
                         </div>
                     </div>
@@ -1031,13 +1030,13 @@ const Presupuestos = () => {
                         <div className="parr-presupuesto">
                             <span>Presupuesto parroquia {nuevoPresupuesto.parr4}:</span>
                             <div className="totalParroquia">
-                                <span>$ {totalParroquia4}</span>
+                                <span><strong>$ {totalParroquia4}</strong></span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="total-general">
-                    <div>TOTAL PROYECTO EJECUTADO: $ {calcularTotalProyecto()}</div>
+                    <div>TOTAL PROYECTO EJECUTADO: <strong>$ {calcularTotalProyecto()}</strong></div>
                 </div>
                 <div className={`box_button_delete_guardar ${habilitado ? "" : "deshabilitado"}`}>
                     <button
