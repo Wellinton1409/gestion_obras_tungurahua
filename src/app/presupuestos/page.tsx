@@ -49,6 +49,8 @@ interface Presupuesto {
     pln42: string[];
     pln43: string[];
     pln44: string[];
+    largos: string[];
+    anchos: string[];
 }
 
 
@@ -90,6 +92,8 @@ const Presupuestos = () => {
         pln42: [],
         pln43: [],
         pln44: [],
+        largos: [],
+        anchos: []
     };
     const [codigo, setCodigo] = useState("");
     const [proyecto, setProyecto] = useState<any | null>(null);
@@ -370,6 +374,36 @@ const Presupuestos = () => {
                                     className="input-parr-via"
                                     placeholder="Vía 1"
                                 />
+                                <div className="vias_medidas">
+                                    <div className="medidas_elementos">
+                                        <span>l=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.largos?.[0] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    largos: [formattedValue,
+                                                        ...(Array.isArray(prevPresupuesto.largos) ? prevPresupuesto.largos.slice(1) : [])],
+                                                }));
+                                            }} className="input_largo" />
+                                    </div>
+                                    <div className="medidas_elementos">
+                                        <span>a=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.anchos?.[0] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    anchos: [formattedValue,
+                                                        ...(Array.isArray(prevPresupuesto.anchos) ? prevPresupuesto.anchos.slice(1) : [])],
+                                                }));
+                                            }} className="input_ancho" />
+                                    </div>
+                                </div>
                                 {Array.from({ length: 12 }, (_, index) => (
                                     <input
                                         key={index}
@@ -407,6 +441,42 @@ const Presupuestos = () => {
                                     className="input-parr-via"
                                     placeholder="Vía 2"
                                 />
+                                <div className="vias_medidas">
+                                    <div className="medidas_elementos">
+                                        <span>l=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.largos?.[1] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    largos: [
+                                                        ...(prevPresupuesto.largos ?? []).slice(0, 1),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.largos ?? []).slice(2),
+                                                    ],
+                                                }));
+                                            }} className="input_largo" />
+                                    </div>
+                                    <div className="medidas_elementos">
+                                        <span>a=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.anchos?.[1] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    anchos: [
+                                                        ...(prevPresupuesto.anchos ?? []).slice(0, 1),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.anchos ?? []).slice(2),
+                                                    ],
+                                                }));
+                                            }} className="input_ancho" />
+                                    </div>
+                                </div>
                                 {Array.from({ length: 12 }, (_, index) => (
                                     <input
                                         key={index}
@@ -444,6 +514,43 @@ const Presupuestos = () => {
                                     className="input-parr-via"
                                     placeholder="Vía 3"
                                 />
+
+                                <div className="vias_medidas">
+                                    <div className="medidas_elementos">
+                                        <span>l=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.largos?.[2] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    largos: [
+                                                        ...(prevPresupuesto.largos ?? []).slice(0, 2),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.largos ?? []).slice(3),
+                                                    ],
+                                                }));
+                                            }} className="input_largo" />
+                                    </div>
+                                    <div className="medidas_elementos">
+                                        <span>a=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.anchos?.[2] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    anchos: [
+                                                        ...(prevPresupuesto.anchos ?? []).slice(0, 2),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.anchos ?? []).slice(3),
+                                                    ],
+                                                }));
+                                            }} className="input_ancho" />
+                                    </div>
+                                </div>
                                 {Array.from({ length: 12 }, (_, index) => (
                                     <input
                                         key={index}
@@ -481,6 +588,42 @@ const Presupuestos = () => {
                                     className="input-parr-via"
                                     placeholder="Vía 4"
                                 />
+                                <div className="vias_medidas">
+                                    <div className="medidas_elementos">
+                                        <span>l=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.largos?.[3] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    largos: [
+                                                        ...(prevPresupuesto.largos ?? []).slice(0, 3),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.largos ?? []).slice(4),
+                                                    ],
+                                                }));
+                                            }} className="input_largo" />
+                                    </div>
+                                    <div className="medidas_elementos">
+                                        <span>a=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.anchos?.[3] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    anchos: [
+                                                        ...(prevPresupuesto.anchos ?? []).slice(0, 3),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.anchos ?? []).slice(4),
+                                                    ],
+                                                }));
+                                            }} className="input_ancho" />
+                                    </div>
+                                </div>
                                 {Array.from({ length: 12 }, (_, index) => (
                                     <input
                                         key={index}
@@ -543,6 +686,42 @@ const Presupuestos = () => {
                                     className="input-parr-via"
                                     placeholder="Vía 1"
                                 />
+                                <div className="vias_medidas">
+                                    <div className="medidas_elementos">
+                                        <span>l=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.largos?.[4] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    largos: [
+                                                        ...(prevPresupuesto.largos ?? []).slice(0, 4),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.largos ?? []).slice(5),
+                                                    ],
+                                                }));
+                                            }} className="input_largo" />
+                                    </div>
+                                    <div className="medidas_elementos">
+                                        <span>a=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.anchos?.[4] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    anchos: [
+                                                        ...(prevPresupuesto.anchos ?? []).slice(0, 4),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.anchos ?? []).slice(5),
+                                                    ],
+                                                }));
+                                            }} className="input_ancho" />
+                                    </div>
+                                </div>
                                 {Array.from({ length: 12 }, (_, index) => (
                                     <input
                                         key={index}
@@ -580,6 +759,42 @@ const Presupuestos = () => {
                                     className="input-parr-via"
                                     placeholder="Vía 2"
                                 />
+                                <div className="vias_medidas">
+                                    <div className="medidas_elementos">
+                                        <span>l=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.largos?.[5] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    largos: [
+                                                        ...(prevPresupuesto.largos ?? []).slice(0, 5),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.largos ?? []).slice(6),
+                                                    ],
+                                                }));
+                                            }} className="input_largo" />
+                                    </div>
+                                    <div className="medidas_elementos">
+                                        <span>a=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.anchos?.[5] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    anchos: [
+                                                        ...(prevPresupuesto.anchos ?? []).slice(0, 5),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.anchos ?? []).slice(6),
+                                                    ],
+                                                }));
+                                            }} className="input_ancho" />
+                                    </div>
+                                </div>
                                 {Array.from({ length: 12 }, (_, index) => (
                                     <input
                                         key={index}
@@ -617,6 +832,42 @@ const Presupuestos = () => {
                                     className="input-parr-via"
                                     placeholder="Vía 3"
                                 />
+                                <div className="vias_medidas">
+                                    <div className="medidas_elementos">
+                                        <span>l=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.largos?.[6] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    largos: [
+                                                        ...(prevPresupuesto.largos ?? []).slice(0, 6),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.largos ?? []).slice(7),
+                                                    ],
+                                                }));
+                                            }} className="input_largo" />
+                                    </div>
+                                    <div className="medidas_elementos">
+                                        <span>a=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.anchos?.[6] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    anchos: [
+                                                        ...(prevPresupuesto.anchos ?? []).slice(0, 6),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.anchos ?? []).slice(7),
+                                                    ],
+                                                }));
+                                            }} className="input_ancho" />
+                                    </div>
+                                </div>
                                 {Array.from({ length: 12 }, (_, index) => (
                                     <input
                                         key={index}
@@ -654,6 +905,42 @@ const Presupuestos = () => {
                                     className="input-parr-via"
                                     placeholder="Vía 4"
                                 />
+                                <div className="vias_medidas">
+                                    <div className="medidas_elementos">
+                                        <span>l=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.largos?.[7] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    largos: [
+                                                        ...(prevPresupuesto.largos ?? []).slice(0, 7),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.largos ?? []).slice(8),
+                                                    ],
+                                                }));
+                                            }} className="input_largo" />
+                                    </div>
+                                    <div className="medidas_elementos">
+                                        <span>a=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.anchos?.[7] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    anchos: [
+                                                        ...(prevPresupuesto.anchos ?? []).slice(0, 7),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.anchos ?? []).slice(8),
+                                                    ],
+                                                }));
+                                            }} className="input_ancho" />
+                                    </div>
+                                </div>
                                 {Array.from({ length: 12 }, (_, index) => (
                                     <input
                                         key={index}
@@ -718,6 +1005,42 @@ const Presupuestos = () => {
                                     className="input-parr-via"
                                     placeholder="Vía 1"
                                 />
+                                <div className="vias_medidas">
+                                    <div className="medidas_elementos">
+                                        <span>l=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.largos?.[8] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    largos: [
+                                                        ...(prevPresupuesto.largos ?? []).slice(0, 8),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.largos ?? []).slice(9),
+                                                    ],
+                                                }));
+                                            }} className="input_largo" />
+                                    </div>
+                                    <div className="medidas_elementos">
+                                        <span>a=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.anchos?.[8] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    anchos: [
+                                                        ...(prevPresupuesto.anchos ?? []).slice(0, 8),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.anchos ?? []).slice(9),
+                                                    ],
+                                                }));
+                                            }} className="input_ancho" />
+                                    </div>
+                                </div>
                                 {Array.from({ length: 12 }, (_, index) => (
                                     <input
                                         key={index}
@@ -755,6 +1078,42 @@ const Presupuestos = () => {
                                     className="input-parr-via"
                                     placeholder="Vía 2"
                                 />
+                                <div className="vias_medidas">
+                                    <div className="medidas_elementos">
+                                        <span>l=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.largos?.[9] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    largos: [
+                                                        ...(prevPresupuesto.largos ?? []).slice(0, 9),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.largos ?? []).slice(10),
+                                                    ],
+                                                }));
+                                            }} className="input_largo" />
+                                    </div>
+                                    <div className="medidas_elementos">
+                                        <span>a=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.anchos?.[9] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    anchos: [
+                                                        ...(prevPresupuesto.anchos ?? []).slice(0, 9),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.anchos ?? []).slice(10),
+                                                    ],
+                                                }));
+                                            }} className="input_ancho" />
+                                    </div>
+                                </div>
                                 {Array.from({ length: 12 }, (_, index) => (
                                     <input
                                         key={index}
@@ -792,6 +1151,42 @@ const Presupuestos = () => {
                                     className="input-parr-via"
                                     placeholder="Vía 3"
                                 />
+                                <div className="vias_medidas">
+                                    <div className="medidas_elementos">
+                                        <span>l=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.largos?.[10] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    largos: [
+                                                        ...(prevPresupuesto.largos ?? []).slice(0, 10),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.largos ?? []).slice(11),
+                                                    ],
+                                                }));
+                                            }} className="input_largo" />
+                                    </div>
+                                    <div className="medidas_elementos">
+                                        <span>a=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.anchos?.[10] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    anchos: [
+                                                        ...(prevPresupuesto.anchos ?? []).slice(0, 10),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.anchos ?? []).slice(11),
+                                                    ],
+                                                }));
+                                            }} className="input_ancho" />
+                                    </div>
+                                </div>
                                 {Array.from({ length: 12 }, (_, index) => (
                                     <input
                                         key={index}
@@ -829,6 +1224,42 @@ const Presupuestos = () => {
                                     className="input-parr-via"
                                     placeholder="Vía 4"
                                 />
+                                <div className="vias_medidas">
+                                    <div className="medidas_elementos">
+                                        <span>l=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.largos?.[11] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    largos: [
+                                                        ...(prevPresupuesto.largos ?? []).slice(0, 11),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.largos ?? []).slice(12),
+                                                    ],
+                                                }));
+                                            }} className="input_largo" />
+                                    </div>
+                                    <div className="medidas_elementos">
+                                        <span>a=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.anchos?.[11] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    anchos: [
+                                                        ...(prevPresupuesto.anchos ?? []).slice(0, 11),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.anchos ?? []).slice(12),
+                                                    ],
+                                                }));
+                                            }} className="input_ancho" />
+                                    </div>
+                                </div>
                                 {Array.from({ length: 12 }, (_, index) => (
                                     <input
                                         key={index}
@@ -891,6 +1322,42 @@ const Presupuestos = () => {
                                     className="input-parr-via"
                                     placeholder="Vía 1"
                                 />
+                                <div className="vias_medidas">
+                                    <div className="medidas_elementos">
+                                        <span>l=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.largos?.[12] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    largos: [
+                                                        ...(prevPresupuesto.largos ?? []).slice(0, 12),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.largos ?? []).slice(13),
+                                                    ],
+                                                }));
+                                            }} className="input_largo" />
+                                    </div>
+                                    <div className="medidas_elementos">
+                                        <span>a=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.anchos?.[12] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    anchos: [
+                                                        ...(prevPresupuesto.anchos ?? []).slice(0, 12),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.anchos ?? []).slice(13),
+                                                    ],
+                                                }));
+                                            }} className="input_ancho" />
+                                    </div>
+                                </div>
                                 {Array.from({ length: 12 }, (_, index) => (
                                     <input
                                         key={index}
@@ -928,6 +1395,42 @@ const Presupuestos = () => {
                                     className="input-parr-via"
                                     placeholder="Vía 2"
                                 />
+                                <div className="vias_medidas">
+                                    <div className="medidas_elementos">
+                                        <span>l=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.largos?.[13] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    largos: [
+                                                        ...(prevPresupuesto.largos ?? []).slice(0, 13),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.largos ?? []).slice(14),
+                                                    ],
+                                                }));
+                                            }} className="input_largo" />
+                                    </div>
+                                    <div className="medidas_elementos">
+                                        <span>a=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.anchos?.[13] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    anchos: [
+                                                        ...(prevPresupuesto.anchos ?? []).slice(0, 13),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.anchos ?? []).slice(14),
+                                                    ],
+                                                }));
+                                            }} className="input_ancho" />
+                                    </div>
+                                </div>
                                 {Array.from({ length: 12 }, (_, index) => (
                                     <input
                                         key={index}
@@ -965,6 +1468,42 @@ const Presupuestos = () => {
                                     className="input-parr-via"
                                     placeholder="Vía 3"
                                 />
+                                <div className="vias_medidas">
+                                    <div className="medidas_elementos">
+                                        <span>l=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.largos?.[14] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    largos: [
+                                                        ...(prevPresupuesto.largos ?? []).slice(0, 14),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.largos ?? []).slice(15),
+                                                    ],
+                                                }));
+                                            }} className="input_largo" />
+                                    </div>
+                                    <div className="medidas_elementos">
+                                        <span>a=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.anchos?.[14] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    anchos: [
+                                                        ...(prevPresupuesto.anchos ?? []).slice(0, 14),
+                                                        formattedValue,
+                                                        ...(prevPresupuesto.anchos ?? []).slice(15),
+                                                    ],
+                                                }));
+                                            }} className="input_ancho" />
+                                    </div>
+                                </div>
                                 {Array.from({ length: 12 }, (_, index) => (
                                     <input
                                         key={index}
@@ -1002,6 +1541,40 @@ const Presupuestos = () => {
                                     className="input-parr-via"
                                     placeholder="Vía 4"
                                 />
+                                <div className="vias_medidas">
+                                    <div className="medidas_elementos">
+                                        <span>l=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.largos?.[15] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    largos: [
+                                                        ...(prevPresupuesto.largos ?? []).slice(0, 15),
+                                                        formattedValue
+                                                    ],
+                                                }));
+                                            }} className="input_largo" />
+                                    </div>
+                                    <div className="medidas_elementos">
+                                        <span>a=</span>
+                                        <input
+                                            type="text"
+                                            value={nuevoPresupuesto.anchos?.[15] || ""}
+                                            onChange={(e) => {
+                                                const formattedValue = formatearNumerosDollar(e.target.value);
+                                                setNuevoPresupuesto((prevPresupuesto) => ({
+                                                    ...prevPresupuesto,
+                                                    anchos: [
+                                                        ...(prevPresupuesto.anchos ?? []).slice(0, 15),
+                                                        formattedValue
+                                                    ],
+                                                }));
+                                            }} className="input_ancho" />
+                                    </div>
+                                </div>
                                 {Array.from({ length: 12 }, (_, index) => (
                                     <input
                                         key={index}

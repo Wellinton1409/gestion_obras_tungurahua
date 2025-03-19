@@ -716,6 +716,35 @@ main {
   margin: 0 5px 0 0;
 }
 
+.vias_medidas {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  width: 100%;
+}
+
+.medidas_elementos {
+  display: flex;
+  flex-direction: row;
+  font-size: 12px;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.input_largo {
+  width: 80%;
+  font-size: 11px;
+  border-radius: 3px;
+  border: none;
+}
+
+.input_ancho {
+  width: 80%;
+  font-size: 11px;
+  border-radius: 3px;
+  border: none;
+}
+
 /* IMPRIMIR*/
 
 @media print {
