@@ -48,7 +48,8 @@ const Proyectos: React.FC = () => {
         fchInicio: "",
         fchTerminacion: "",
         costoPorcent: "",
-        observ: ""
+        observ: "",
+        fchModificacion: ""
     };
     const [nuevoProyecto, setNuevoProyecto] = useState<any>(initialProyecto);
     const [mensajeError, setMensajeError] = useState("");
@@ -158,6 +159,7 @@ const Proyectos: React.FC = () => {
     // Guardar o actualizar proyecto
     const guardarProyecto = async () => {
         try {
+
             if (!nuevoProyecto.codFiscalizador.trim() || !nuevoProyecto.nombreProyecto.trim()) {
                 alert("El código del fiscalizador y el nombre del proyecto son obligatorios.");
                 return;
@@ -298,7 +300,18 @@ const Proyectos: React.FC = () => {
                             <div className="boxGuardar">
                                 <button
                                     type="button"
-                                    onClick={guardarProyecto}
+                                    onClick={() => {
+                                        const fecha = new Date();
+                                        const fchFormateada = `${fecha.getDate().toString().padStart(2, "0")}-${(fecha.getMonth() + 1)
+                                            .toString()
+                                            .padStart(2, "0")}-${fecha.getFullYear()}`;
+
+                                        setNuevoProyecto({
+                                            ...nuevoProyecto,
+                                            fchModificacion: fchFormateada,
+                                        })
+                                        guardarProyecto();
+                                    }}
                                     className="buttonActualizar no-print"
                                 >
                                     Guardar Cambios
@@ -1372,6 +1385,12 @@ const Proyectos: React.FC = () => {
                                     }
                                     className="input_campos"
                                 />
+                            </div>
+                            <div className="text_modificar">
+                                <strong>Última modificación:</strong>
+                                <label>
+                                    {nuevoProyecto.fchModificacion || ""}
+                                </label>
                             </div>
                         </div>
                         <div className={`box_button_delete_guardar ${habilitado ? "" : "deshabilitado"}`}>
